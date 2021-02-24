@@ -1,0 +1,13 @@
+{
+    "name": "svsystems/versioning-bundle",
+    "description": "Private package to handle version numbers and deploys",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sven Vetter",
+            "email": "git.09o@svenvetter.com"
+        }
+    ],
+    "require": {}
+}

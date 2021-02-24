@@ -1,5 +1,5 @@
 {
-    "name": "svsystems/versioning-bundle",
+    "name": "svc/versioning-bundle",
     "description": "Private package to handle version numbers and deploys",
     "type": "symfony-bundle",
     "license": "MIT",

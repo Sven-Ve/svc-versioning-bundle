@@ -1,8 +1,7 @@
 <?php
 
-$version = "v0.1.0";
-$message = "added deployment script";
-
+$version = "v0.1.1";
+$message = "create config file automatically";
 
 $res = shell_exec('git add .');
 $res = shell_exec('git commit -m "' . $message . '"');

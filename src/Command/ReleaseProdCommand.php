@@ -24,7 +24,6 @@ class ReleaseProdCommand extends Command
       ->addOption('minor', null, InputOption::VALUE_NONE, 'Add minor version')
       ->addOption('patch', null, InputOption::VALUE_NONE, 'Add patch version')
       ->addOption('init', null, InputOption::VALUE_NONE, 'Init versioning (set to 0.0.1)')
-      ->addOption('createConf', null, InputOption::VALUE_NONE, 'Create config file svc_versioning.yaml')
       ->addArgument('commitMessage', InputArgument::OPTIONAL, 'Commit message')
     ;
   }
@@ -46,18 +45,6 @@ class ReleaseProdCommand extends Command
   {
     $io = new SymfonyStyle($input, $output);
 
-    if ($input->getOption('createConf')) {
-      $configFile='config/packages/svc_versioning.yaml';
-      if ($this->versionHandling->writeConfigFile($configFile)) {
-        $io->success("Config file '$configFile' created. Please adapt it.");
-        return Command::SUCCESS;
-      } else {
-        $io->error("Cannot create config file '$configFile'. Maybe it exists?");
-        return Command::FAILURE;
-      }
-      exit;
-    }
-
     $init = $input->getOption('init');
     
     if (!$init) {
@@ -76,8 +63,6 @@ class ReleaseProdCommand extends Command
       $input->getOption('init')
     );
     $io->writeln("New version: $newVersion");
-
-
 
 
     $commitMessage = $input->getArgument('commitMessage');

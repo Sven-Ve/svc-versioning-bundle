@@ -16,15 +16,8 @@ class VersionHandling
     $this->versionFile->setPath($path);
   }
 
-  public function getNewVersion(
-    $version,
-    $majorVer, 
-    $minorVer, 
-    $patchVer,
-    $init = false
-    ): string 
+  public function getNewVersion($version, $majorVer, $minorVer, $patchVer, $init = false): string 
   {
-
     if ($init) {
       $newVersion=$this->versionString->getInitial();
     } else {
@@ -84,15 +77,4 @@ class VersionHandling
     return $this->versionFile->write($fileName, $text, true);
   }
 
-  public function writeConfigFile($fileName) :bool {
-    if (file_exists($fileName)) {
-      return false;
-    }
-    $text="svc_versioning:\n";
-    $text.="    # should git checkin and push runs? Have to be configured first.\n";
-    $text.="    run_git: false\n";
-    $text.="    # should easycorp/easy-deploy-bundle runs? Have to be installed and configured first.\n";
-    $text.="    run_deploy: false\n";
-    return $this->versionFile->write($fileName, $text, true);
-  }
 }

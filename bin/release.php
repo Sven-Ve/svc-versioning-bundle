@@ -1,7 +1,7 @@
 <?php
 
-$version = "v0.1.1";
-$message = "create config file automatically";
+$version = "v0.1.2";
+$message = "added linefeed in README.md";
 
 $res = shell_exec('git add .');
 $res = shell_exec('git commit -m "' . $message . '"');

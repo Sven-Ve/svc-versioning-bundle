@@ -73,7 +73,7 @@ class VersionHandling
   }
 
   public function appendREADME($fileName, $version, $message) :bool {
-    $text="\n * Version $version: $message";
+    $text="\n\n * Version $version: $message";
     return $this->versionFile->write($fileName, $text, true);
   }
 

@@ -73,7 +73,7 @@ class VersionHandling
   }
 
   public function appendREADME($fileName, $version, $message) :bool {
-    $text="\n\n * Version $version: $message";
+    $text="* Version $version: $message" . PHP_EOL;
     return $this->versionFile->write($fileName, $text, true);
   }
 

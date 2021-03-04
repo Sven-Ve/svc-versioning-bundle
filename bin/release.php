@@ -1,7 +1,8 @@
+#!/usr/bin/env php
 <?php
 
-$version = "v0.1.2";
-$message = "added linefeed in README.md";
+$version = "v0.1.3";
+$message = "correct linefeed in README.md";
 
 $res = shell_exec('git add .');
 $res = shell_exec('git commit -m "' . $message . '"');

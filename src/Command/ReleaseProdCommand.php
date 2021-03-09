@@ -83,7 +83,7 @@ class ReleaseProdCommand extends Command
       $res = shell_exec('git add .');
       $res = shell_exec('git commit -S -m "' . $commitMessage . '"');
       $res = shell_exec('git push');
-      $res = shell_exec('git tag -a v' . $newVersion . ' -m "' . $commitMessage . '"');
+      $res = shell_exec('git tag -a -s v' . $newVersion . ' -m "' . $commitMessage . '"');
       $res = shell_exec('git push origin v' . $newVersion);
     }
 

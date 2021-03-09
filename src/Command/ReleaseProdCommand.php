@@ -81,7 +81,7 @@ class ReleaseProdCommand extends Command
 
     if ($this->run_git) {
       $res = shell_exec('git add .');
-      $res = shell_exec('git commit -m "' . $commitMessage . '"');
+      $res = shell_exec('git commit -S -m "' . $commitMessage . '"');
       $res = shell_exec('git push');
       $res = shell_exec('git tag -a v' . $newVersion . ' -m "' . $commitMessage . '"');
       $res = shell_exec('git push origin v' . $newVersion);

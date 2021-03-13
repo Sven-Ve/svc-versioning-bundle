@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Svc\VersioningBundle\Service;
 
-use Exception;
-
 class VersionString
 {
     private const VERSION_SEPARATOR = '.';

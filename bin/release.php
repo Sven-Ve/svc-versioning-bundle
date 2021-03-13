@@ -1,8 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-$version = "v0.2.1";
-$message = "sign commits and tags";
+$version = "v1.0.0";
+$message = "cleanup...";
 
 $res = shell_exec('git add .');
 $res = shell_exec('git commit -S -m "' . $message . '"');

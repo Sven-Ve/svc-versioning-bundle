@@ -1,8 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-$version = "v1.0.0";
-$message = "cleanup...";
+$version = "v1.0.1";
+$message = "request php >7.4.0 or >8.0.0";
 
 $res = shell_exec('git add .');
 $res = shell_exec('git commit -S -m "' . $message . '"');

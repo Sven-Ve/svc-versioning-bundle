@@ -67,8 +67,9 @@ class VersionHandling
   }
 
   public function writeTwigFile($fileName, $version) :bool {
-    $text="Version: $version";
-    $text.=" (Release: " . date("d.m.Y H:i:s T") . ")";
+    $text="<span title='Release " . date("d.m.Y H:i:s T") . "'>";
+    $text.="Version: $version"; 
+    $text.="</span>";
     return $this->versionFile->write($fileName, $text);
   }
 

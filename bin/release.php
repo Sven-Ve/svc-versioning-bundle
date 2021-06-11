@@ -1,14 +1,20 @@
 #!/usr/bin/env php
 <?php
 
-$version = "v1.0.2";
-$message = "changed twig-version file, release date is now in title";
+$version = "v1.2.0";
+$message = "write changes to CHANGELOG.md istead of README.md";
+
+file_put_contents("CHANGELOG.md", "\n\n## Version " . $version, FILE_APPEND);
+file_put_contents("CHANGELOG.md", "\n*" . date("r") . "*", FILE_APPEND);
+file_put_contents("CHANGELOG.md", "\n- " . $message . "\n", FILE_APPEND);
 
 $res = shell_exec('git add .');
-$res = shell_exec('git commit -S -m "' . $message . '"');
+$res = shell_exec('git commit -m "' . $message . '"');
 $res = shell_exec('git push');
-$res = shell_exec('git tag -a -s ' . $version . ' -m "' . $message . '"');
+
+$res = shell_exec('git tag -a ' . $version . ' -m "' . $message . '"');
 $res = shell_exec('git push origin ' . $version);
 
 $res = shell_exec('ssh svenvett@svenvett.myhostpoint.ch  "cd /home/svenvett/www/satis; bin/satis build satis.json"');
+
 ?>

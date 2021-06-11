@@ -75,7 +75,7 @@ class ReleaseProdCommand extends Command
       $output->writeln('<error> Cannot write template file. </error>');
     }
 
-    if (!$this->versionHandling->appendREADME('README.md', $newVersion, $commitMessage)) {
+    if (!$this->versionHandling->appendCHANGELOG('CHANGELOG.md', $newVersion, $commitMessage)) {
       $output->writeln('<error> Cannot write README.md </error>');
     }
 

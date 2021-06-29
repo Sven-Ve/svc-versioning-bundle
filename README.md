@@ -1,5 +1,6 @@
 # SvcVersioningBundle
 
+[![CI](https://github.com/Sven-Ve/svc-versioning-bundle/actions/workflows/php.yml/badge.svg)](https://github.com/Sven-Ve/svc-versioning-bundle/actions/workflows/php.yml)
 
 This bundle supports versioning, (optional) git commit, pull and tagging and (optional) deployment.
 Semantic versioning with major, minor and patch versions is used.

@@ -2,9 +2,9 @@
 
 namespace Svc\VersioningBundle\DependencyInjection;
 
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\HttpKernel\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class SvcVersioningExtension extends Extension
@@ -20,7 +20,7 @@ class SvcVersioningExtension extends Extension
     $configuration = $this->getConfiguration($configs, $container);
     $config = $this->processConfiguration($configuration, $configs);
 
-    $definition = $container->getDefinition('svc_versioning.release_prod_command');
+    $definition = $container->getDefinition('svc_versioning.versioning_command');
     $definition->setArgument(0, $config['run_git']);
     $definition->setArgument(1, $config['run_deploy']);
   }
@@ -38,6 +38,6 @@ class SvcVersioningExtension extends Extension
     $text.="    # should easycorp/easy-deploy-bundle runs? Have to be installed and configured first.\n";
     $text.="    run_deploy: false\n";
     file_put_contents($fileName, $text);
-    die("Please check and adapt config 'file config/packages/svc_versioning.yaml'");
+    dd("Please check and adapt config 'file config/packages/svc_versioning.yaml'");
   }
 }

@@ -5,8 +5,8 @@
         http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
 
-      <service id="svc_versioning.release_prod_command" class="Svc\VersioningBundle\Command\ReleaseProdCommand" public="true" >
-        <tag name="console.command" command="app:release:prod" />
+      <service id="svc_versioning.versioning_command" class="Svc\VersioningBundle\Command\VersioningCommand" public="true" >
+        <tag name="console.command" command="app:versioning" />
       </service>
     </services>
 </container>

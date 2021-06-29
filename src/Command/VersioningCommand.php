@@ -11,10 +11,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class ReleaseProdCommand extends Command
+class VersioningCommand extends Command
 {
-  protected static $defaultName = 'app:release:prod';
-  protected static $defaultDescription = 'Prepare releasing to prod';
+  protected static $defaultName = 'app:versioning';
+  protected static $defaultDescription = 'Versioning application, prepare releasing to prod';
 
   protected function configure()
   {
@@ -24,8 +24,7 @@ class ReleaseProdCommand extends Command
       ->addOption('minor', null, InputOption::VALUE_NONE, 'Add minor version')
       ->addOption('patch', null, InputOption::VALUE_NONE, 'Add patch version')
       ->addOption('init', null, InputOption::VALUE_NONE, 'Init versioning (set to 0.0.1)')
-      ->addArgument('commitMessage', InputArgument::OPTIONAL, 'Commit message')
-    ;
+      ->addArgument('commitMessage', InputArgument::OPTIONAL, 'Commit message');
   }
 
   private $versionHandling;
@@ -46,13 +45,13 @@ class ReleaseProdCommand extends Command
     $io = new SymfonyStyle($input, $output);
 
     $init = $input->getOption('init');
-    
+
     if (!$init) {
       $version = $this->versionHandling->getCurrentVersion();
       $io->writeln("Current version: $version");
     } else {
       $io->writeln("Initializing versioning...");
-      $version=null;
+      $version = null;
     }
 
     $newVersion = $this->versionHandling->getNewVersion(
@@ -67,7 +66,7 @@ class ReleaseProdCommand extends Command
 
     $commitMessage = $input->getArgument('commitMessage');
     if (!$commitMessage) {
-        $commitMessage = "Increase version to $newVersion";
+      $commitMessage = "Increase version to $newVersion";
     }
 
 

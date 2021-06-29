@@ -17,7 +17,17 @@ class VersionHandling
     $this->versionFile->setPath($path);
   }
 
-  public function getNewVersion($version, $majorVer, $minorVer, $patchVer, $init = false): string
+  /**
+   * get a new version
+   *
+   * @param string $version
+   * @param boolean $majorVer
+   * @param boolean $minorVer
+   * @param boolean $patchVer
+   * @param boolean $init
+   * @return string
+   */
+  public function getNewVersion(string $version, bool $majorVer, bool $minorVer, bool $patchVer, bool $init = false): string
   {
     if ($init) {
       $newVersion = $this->versionString->getInitial();
@@ -55,6 +65,11 @@ class VersionHandling
     return $newVersion;
   }
 
+  /**
+   * get the current version from version file
+   *
+   * @return string
+   */
   public function getCurrentVersion(): string
   {
     $fileName = $this->versionFile->getFilename();

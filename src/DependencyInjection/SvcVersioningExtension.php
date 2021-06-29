@@ -2,10 +2,11 @@
 
 namespace Svc\VersioningBundle\DependencyInjection;
 
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\HttpKernel\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+
 
 class SvcVersioningExtension extends Extension
 {
@@ -14,8 +15,11 @@ class SvcVersioningExtension extends Extension
     $rootPath = $container->getParameter("kernel.project_dir");
     $this->createConfigIfNotExists($rootPath);
 
-    $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+    $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
     $loader->load('services.xml');
+
+    $configuration = $this->getConfiguration($configs, $container);
+    $config = $this->processConfiguration($configuration, $configs);
 
     $configuration = $this->getConfiguration($configs, $container);
     $config = $this->processConfiguration($configuration, $configs);
@@ -38,6 +42,6 @@ class SvcVersioningExtension extends Extension
     $text.="    # should easycorp/easy-deploy-bundle runs? Have to be installed and configured first.\n";
     $text.="    run_deploy: false\n";
     file_put_contents($fileName, $text);
-    dd("Please check and adapt config 'file config/packages/svc_versioning.yaml'");
+    dump("Please check and adapt config 'file config/packages/svc_versioning.yaml'");
   }
 }

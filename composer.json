@@ -13,7 +13,8 @@
     "php": "^7.3.0 | ^8.0.0",
     "symfony/console": "^5",
     "symfony/http-kernel": "^5",
-    "symfony/dependency-injection": "^5"
+    "symfony/dependency-injection": "^5",
+    "symfony/config": "^5"
   },
   "suggest": {
     "easycorp/easy-deploy-bundle": "Prefered tool to deploy the application"

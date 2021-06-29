@@ -11,7 +11,8 @@
   ],
   "require": {
     "php": "^7.3.0 | ^8.0.0",
-    "symfony/console": "^5"
+    "symfony/console": "^5",
+    "symfony/http-kernel": "^5"
   },
   "autoload": {
     "psr-4": {

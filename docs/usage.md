@@ -15,14 +15,14 @@ svc_versioning:
 
 ## Call
 
-```
-bin/console app:versioning
+```console
+$ bin/console app:versioning
 ```
 
 ## Parameter
 
-```
-bin/console app:versioning --help
+```console
+$ bin/console app:versioning --help
 Description:
   Versioning application, prepare releasing to prod
 

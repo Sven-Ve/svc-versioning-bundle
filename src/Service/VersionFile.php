@@ -7,13 +7,25 @@ namespace Svc\VersioningBundle\Service;
 class VersionFile
 {
   private const VERSION_FILE = '.version';
-  private $path = ".";
+  private string $path = ".";
 
-  public function setPath($path)
+
+  /**
+   * set the path of the config file
+   *
+   * @param string $path
+   * @return void
+   */
+  public function setPath(string $path): void
   {
     $this->path = $path;
   }
 
+  /**
+   * get the config file name
+   *
+   * @return string
+   */
   public function getFilename(): string
   {
     return $this->path . DIRECTORY_SEPARATOR . self::VERSION_FILE;

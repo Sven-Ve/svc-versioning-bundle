@@ -27,11 +27,11 @@ class VersioningCommand extends Command
       ->addArgument('commitMessage', InputArgument::OPTIONAL, 'Commit message');
   }
 
-  private $versionHandling;
-  private $run_deploy;
-  private $run_git;
+  private ServiceVersionHandling $versionHandling;
+  private bool $run_deploy;
+  private bool $run_git;
 
-  public function __construct($run_git, $run_deploy)
+  public function __construct(bool $run_git, bool $run_deploy)
   {
     parent::__construct();
     $this->versionHandling = new ServiceVersionHandling();

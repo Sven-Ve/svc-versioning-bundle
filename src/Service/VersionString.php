@@ -32,7 +32,13 @@ class VersionString
       return implode(self::VERSION_SEPARATOR, $versionArray);
     }
 
-    private function parser($version): array {
+    /**
+     * convert version string (1.2.3) in an array
+     *
+     * @param string $version
+     * @return array
+     */
+    private function parser(string $version): array {
       $parts = explode('.', $version);
       return $parts;
     }

@@ -13,3 +13,8 @@
 ## Version v1.3.1
 *Tue, 29 Jun 2021 20:38:00 +0000*
 - added symfony/config to dependencies
+
+
+## Version v1.3.2
+*Wed, 04 Aug 2021 09:08:54 +0000*
+- added static code analysis (phpstan)

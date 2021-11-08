@@ -18,3 +18,8 @@
 ## Version v1.3.2
 *Wed, 04 Aug 2021 09:08:54 +0000*
 - added static code analysis (phpstan)
+
+
+## Version v1.4.0
+*Mon, 08 Nov 2021 20:53:20 +0000*
+- ready for symfony 5.4 / 6.0

@@ -23,3 +23,8 @@
 ## Version v1.4.0
 *Mon, 08 Nov 2021 20:53:20 +0000*
 - ready for symfony 5.4 / 6.0
+
+
+## Version v1.4.1
+*Wed, 27 Apr 2022 10:08:46 +0000*
+- ready for symfony 5.4 / 6.0 (update composer.json too)

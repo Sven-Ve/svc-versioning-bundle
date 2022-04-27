@@ -1,8 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-$version = "v1.4.0";
-$message = "ready for symfony 5.4 / 6.0";
+$version = "v1.4.1";
+$message = "ready for symfony 5.4 / 6.0 (update composer.json too)";
 
 file_put_contents("CHANGELOG.md", "\n\n## Version " . $version, FILE_APPEND);
 file_put_contents("CHANGELOG.md", "\n*" . date("r") . "*", FILE_APPEND);

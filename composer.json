@@ -10,11 +10,11 @@
     }
   ],
   "require": {
-    "php": "^7.3.0 | ^8.0.0",
-    "symfony/console": "^5",
-    "symfony/http-kernel": "^5",
-    "symfony/dependency-injection": "^5",
-    "symfony/config": "^5"
+    "php": "^7.3.0 | ^8",
+    "symfony/console": "^5|^6",
+    "symfony/http-kernel": "^5|^6",
+    "symfony/dependency-injection": "^5|^6",
+    "symfony/config": "^5|^6"
   },
   "suggest": {
     "easycorp/easy-deploy-bundle": "Prefered tool to deploy the application"
@@ -28,6 +28,6 @@
     "phpstan": "vendor/bin/phpstan analyse src/ --level 5 -c .phpstan.neon"
   },
   "require-dev": {
-    "phpstan/phpstan": "^0.12.94"
+    "phpstan/phpstan": "^1"
   }
 }

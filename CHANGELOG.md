@@ -28,3 +28,8 @@
 ## Version v1.4.1
 *Wed, 27 Apr 2022 10:08:46 +0000*
 - ready for symfony 5.4 / 6.0 (update composer.json too)
+
+
+## Version v1.5.0
+*Wed, 27 Apr 2022 10:49:43 +0000*
+- added parameter pre-command to run scripts before versioning

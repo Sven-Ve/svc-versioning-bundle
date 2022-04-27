@@ -21,28 +21,43 @@ class VersioningCommand extends Command
     $this
       ->setDescription(self::$defaultDescription)
       ->addOption('major', null, InputOption::VALUE_NONE, 'Add major version')
-      ->addOption('minor', null, InputOption::VALUE_NONE, 'Add minor version')
-      ->addOption('patch', null, InputOption::VALUE_NONE, 'Add patch version')
-      ->addOption('init', null, InputOption::VALUE_NONE, 'Init versioning (set to 0.0.1)')
+      ->addOption('minor', 'm', InputOption::VALUE_NONE, 'Add minor version')
+      ->addOption('patch', 'p', InputOption::VALUE_NONE, 'Add patch version')
+      ->addOption('init', 'i', InputOption::VALUE_NONE, 'Init versioning (set to 0.0.1)')
       ->addArgument('commitMessage', InputArgument::OPTIONAL, 'Commit message');
   }
 
   private ServiceVersionHandling $versionHandling;
   private bool $run_deploy;
   private bool $run_git;
+  private ?string $pre_command;
 
-  public function __construct(bool $run_git, bool $run_deploy)
+  public function __construct(bool $run_git, bool $run_deploy, ?string $pre_command)
   {
     parent::__construct();
     $this->versionHandling = new ServiceVersionHandling();
     $this->run_deploy = $run_deploy;
     $this->run_git = $run_git;
+    $this->pre_command = $pre_command;
   }
 
 
   protected function execute(InputInterface $input, OutputInterface $output): int
   {
+
     $io = new SymfonyStyle($input, $output);
+
+
+    if ($this->pre_command) {
+      $io->writeln("Running pre command: " . $this->pre_command);
+      system($this->pre_command, $res);
+      if ($res>0) {
+        $output->writeln('<error> Error during execution pre command. Versioning cannceled. </error>');
+        return Command::FAILURE;
+      }
+    }
+
+    return 1;
 
     $init = $input->getOption('init');
 
@@ -86,13 +101,12 @@ class VersioningCommand extends Command
       $res = shell_exec('git push origin v' . $newVersion);
     }
 
+    // runs easycorp/easy-deploy-bundle
     if ($this->run_deploy) {
       $deployCommand = $this->getApplication()->find('deploy');
       $emptyInput = new ArrayInput([]);
       $returnCode = $deployCommand->run($emptyInput, $output);
     }
-
-    // $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
 
     return Command::SUCCESS;
   }

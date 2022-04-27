@@ -11,6 +11,9 @@ svc_versioning:
     run_git: true
     # should easycorp/easy-deploy-bundle runs? Have to be installed and configured first.
     run_deploy: true
+    # run this command before start versioning, stop on error (e.q. phpstan, tests, ...)'
+    pre_command: ~
+    # pre_command: composer run-script phpstan
 ```
 
 ## Call

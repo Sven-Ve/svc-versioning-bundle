@@ -27,6 +27,7 @@ class SvcVersioningExtension extends Extension
     $definition = $container->getDefinition('svc_versioning.versioning_command');
     $definition->setArgument(0, $config['run_git']);
     $definition->setArgument(1, $config['run_deploy']);
+    $definition->setArgument(2, $config['pre_command'] ?? null);
   }
 
 

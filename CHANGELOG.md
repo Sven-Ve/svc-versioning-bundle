@@ -33,3 +33,8 @@
 ## Version v1.5.0
 *Wed, 27 Apr 2022 10:49:43 +0000*
 - added parameter pre-command to run scripts before versioning
+
+
+## Version v1.5.1
+*Wed, 27 Apr 2022 12:04:41 +0000*
+- deleted wrong return...

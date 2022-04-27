@@ -57,8 +57,6 @@ class VersioningCommand extends Command
       }
     }
 
-    return 1;
-
     $init = $input->getOption('init');
 
     if (!$init) {

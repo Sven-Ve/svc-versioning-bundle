@@ -38,7 +38,7 @@ class VersionString
      * @param string $version
      * @return array
      */
-    private function parser(string $version): array {
+    private function parser(string $version): array
       $parts = explode('.', $version);
       return $parts;
     }

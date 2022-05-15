@@ -1,8 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-$version = "v1.5.1";
-$message = "deleted wrong return...";
+$version = "3.0.0";
+$message = "version >=3 runs only with symfony 5.4|6 and php 8";
 
 echo("Running phpstan:\n");
 system("composer run-script phpstan", $res);

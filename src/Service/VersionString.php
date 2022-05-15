@@ -19,11 +19,10 @@ class VersionString
     ];
   }
 
-
   public function getInitial(): string
   {
     $format = '0%s0%s1';
-    $ret    = sprintf($format, self::VERSION_SEPARATOR, self::VERSION_SEPARATOR);
+    $ret = sprintf($format, self::VERSION_SEPARATOR, self::VERSION_SEPARATOR);
 
     return $ret;
   }
@@ -34,14 +33,12 @@ class VersionString
   }
 
   /**
-   * convert version string (1.2.3) in an array
-   *
-   * @param string $version
-   * @return array
+   * convert version string (1.2.3) in an array.
    */
   private function parser(string $version): array
   {
     $parts = explode('.', $version);
+
     return $parts;
   }
 }

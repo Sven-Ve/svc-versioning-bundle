@@ -7,12 +7,11 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-
 class SvcVersioningExtension extends Extension
 {
   public function load(array $configs, ContainerBuilder $container)
   {
-    $rootPath = $container->getParameter("kernel.project_dir");
+    $rootPath = $container->getParameter('kernel.project_dir');
     $this->createConfigIfNotExists($rootPath);
 
     $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
@@ -30,18 +29,18 @@ class SvcVersioningExtension extends Extension
     $definition->setArgument(2, $config['pre_command'] ?? null);
   }
 
-
-  private function createConfigIfNotExists($rootPath) {
-    $fileName= $rootPath . "/config/packages/svc_versioning.yaml";
+  private function createConfigIfNotExists($rootPath)
+  {
+    $fileName = $rootPath . '/config/packages/svc_versioning.yaml';
     if (file_exists($fileName)) {
       return false;
     }
-    
-    $text="svc_versioning:\n";
-    $text.="    # should git checkin and push runs? Have to be configured first.\n";
-    $text.="    run_git: false\n";
-    $text.="    # should easycorp/easy-deploy-bundle runs? Have to be installed and configured first.\n";
-    $text.="    run_deploy: false\n";
+
+    $text = "svc_versioning:\n";
+    $text .= "    # should git checkin and push runs? Have to be configured first.\n";
+    $text .= "    run_git: false\n";
+    $text .= "    # should easycorp/easy-deploy-bundle runs? Have to be installed and configured first.\n";
+    $text .= "    run_deploy: false\n";
     file_put_contents($fileName, $text);
     dump("Please check and adapt config 'file config/packages/svc_versioning.yaml'");
   }

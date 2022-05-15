@@ -14,6 +14,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class VersioningCommand extends Command
 {
   protected static $defaultName = 'app:versioning';
+
   protected static $defaultDescription = 'Versioning application, prepare releasing to prod';
 
   protected function configure()
@@ -27,32 +28,24 @@ class VersioningCommand extends Command
       ->addArgument('commitMessage', InputArgument::OPTIONAL, 'Commit message');
   }
 
-  private ServiceVersionHandling $versionHandling;
-  private bool $run_deploy;
-  private bool $run_git;
-  private ?string $pre_command;
+  private readonly ServiceVersionHandling $versionHandling;
 
-  public function __construct(bool $run_git, bool $run_deploy, ?string $pre_command)
+  public function __construct(private readonly bool $run_git, private readonly bool $run_deploy, private readonly ?string $pre_command)
   {
     parent::__construct();
     $this->versionHandling = new ServiceVersionHandling();
-    $this->run_deploy = $run_deploy;
-    $this->run_git = $run_git;
-    $this->pre_command = $pre_command;
   }
-
 
   protected function execute(InputInterface $input, OutputInterface $output): int
   {
-
     $io = new SymfonyStyle($input, $output);
 
-
     if ($this->pre_command) {
-      $io->writeln("Running pre command: " . $this->pre_command);
+      $io->writeln('Running pre command: ' . $this->pre_command);
       system($this->pre_command, $res);
-      if ($res>0) {
+      if ($res > 0) {
         $output->writeln('<error> Error during execution pre command. Versioning cannceled. </error>');
+
         return Command::FAILURE;
       }
     }
@@ -63,7 +56,7 @@ class VersioningCommand extends Command
       $version = $this->versionHandling->getCurrentVersion();
       $io->writeln("Current version: $version");
     } else {
-      $io->writeln("Initializing versioning...");
+      $io->writeln('Initializing versioning...');
       $version = null;
     }
 
@@ -76,12 +69,10 @@ class VersioningCommand extends Command
     );
     $io->writeln("New version: $newVersion");
 
-
     $commitMessage = $input->getArgument('commitMessage');
     if (!$commitMessage) {
       $commitMessage = "Increase version to $newVersion";
     }
-
 
     if (!$this->versionHandling->writeTwigFile('templates/_version.html.twig', $newVersion)) {
       $output->writeln('<error> Cannot write template file. </error>');

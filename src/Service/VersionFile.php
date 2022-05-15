@@ -7,14 +7,11 @@ namespace Svc\VersioningBundle\Service;
 class VersionFile
 {
   private const VERSION_FILE = '.version';
-  private string $path = ".";
 
+  private string $path = '.';
 
   /**
-   * set the path of the config file
-   *
-   * @param string $path
-   * @return void
+   * set the path of the config file.
    */
   public function setPath(string $path): void
   {
@@ -22,9 +19,7 @@ class VersionFile
   }
 
   /**
-   * get the config file name
-   *
-   * @return string
+   * get the config file name.
    */
   public function getFilename(): string
   {
@@ -44,12 +39,9 @@ class VersionFile
   }
 
   /**
-   * write/append text in a file
+   * write/append text in a file.
    *
-   * @param string $filename
    * @param string $buffer the message text
-   * @param boolean $append
-   * @return boolean
    */
   public function write(string $filename, string $buffer, bool $append = false): bool
   {
@@ -61,6 +53,7 @@ class VersionFile
     if (@file_put_contents($filename, $buffer, $flag) === false) {
       return false;
     }
+
     return true;
   }
 }

@@ -38,3 +38,8 @@
 ## Version v1.5.1
 *Wed, 27 Apr 2022 12:04:41 +0000*
 - deleted wrong return...
+
+
+## Version 3.0.0
+*Sun, 15 May 2022 08:32:16 +0000*
+- version >=3 runs only with symfony 5.4|6 and php 8

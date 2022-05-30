@@ -3,6 +3,7 @@
 namespace Svc\VersioningBundle\Command;
 
 use Svc\VersioningBundle\Service\VersionHandling as ServiceVersionHandling;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
@@ -11,16 +12,16 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+  name: 'app:versioning',
+  description: 'Versioning application, prepare releasing to prod.',
+  hidden: false
+)]
 class VersioningCommand extends Command
 {
-  protected static $defaultName = 'app:versioning';
-
-  protected static $defaultDescription = 'Versioning application, prepare releasing to prod';
-
   protected function configure()
   {
     $this
-      ->setDescription(self::$defaultDescription)
       ->addOption('major', null, InputOption::VALUE_NONE, 'Add major version')
       ->addOption('minor', 'm', InputOption::VALUE_NONE, 'Add minor version')
       ->addOption('patch', 'p', InputOption::VALUE_NONE, 'Add patch version')

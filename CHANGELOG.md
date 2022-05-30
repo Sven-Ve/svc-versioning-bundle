@@ -43,3 +43,8 @@
 ## Version 3.0.0
 *Sun, 15 May 2022 08:32:16 +0000*
 - version >=3 runs only with symfony 5.4|6 and php 8
+
+
+## Version 3.0.1
+*Mon, 30 May 2022 11:21:35 +0000*
+- move commands to the new AsCommand syntax

@@ -9,7 +9,7 @@ class SentryReleaseHandling
 {
   public const FILE_NAME = 'config/packages/sentry.yaml';
 
-  public function WriteNewSentryRelease(string $version, SymfonyStyle $io): bool
+  public function WriteNewSentryRelease(string $version, ?string $sentryAppName, SymfonyStyle $io): bool
   {
     try {
       $yamlArray = Yaml::parseFile(self::FILE_NAME);
@@ -19,17 +19,22 @@ class SentryReleaseHandling
       return false;
     }
 
+    $release = $version;
+    if ($sentryAppName) {
+      $sentryAppName = preg_replace('/\s+/', '', $sentryAppName);
+      $release = $sentryAppName . "@" . $release;
+    }
     if (array_key_exists('when@dev', $yamlArray) and isset($yamlArray['when@dev']['sentry'])) {
-      $yamlArray['when@dev']['sentry']['options']['release'] = $version;
+      $yamlArray['when@dev']['sentry']['options']['release'] = $release;
     }
     if (array_key_exists('when@prod', $yamlArray) and isset($yamlArray['when@prod']['sentry'])) {
-      $yamlArray['when@prod']['sentry']['options']['release'] = $version;
+      $yamlArray['when@prod']['sentry']['options']['release'] = $release;
     }
     if (array_key_exists('when@test', $yamlArray) and isset($yamlArray['when@test']['sentry'])) {
-      $yamlArray['when@test']['sentry']['options']['release'] = $version;
+      $yamlArray['when@test']['sentry']['options']['release'] = $release;
     }
     if (array_key_exists('sentry', $yamlArray) and isset($yamlArray['sentry']['dsn'])) {
-      $yamlArray['sentry']['options']['release'] = $version;
+      $yamlArray['sentry']['options']['release'] = $release;
     }
 
     try {

@@ -1,8 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-$version = "4.0.0";
-$message = "build with Symfony 6.1 bundle features, runs only with symfony 6.\n-add sentry release handling and config parameter";
+$version = "4.0.1";
+$message = "add app name for sentry release";
 
 echo("Running phpstan:\n");
 system("composer run-script phpstan", $res);

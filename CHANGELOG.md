@@ -52,5 +52,10 @@
 
 ## Version 4.0.0
 *Thu, 24 Nov 2022 19:57:31 +0000*
-- build with Symfony 6.1 bundle features, runs only with symfony 6.
--add sentry release handling and config parameter
+- build with Symfony 6.1 bundle features, runs only with symfony 6
+- add sentry release handling and config parameter
+
+
+## Version 4.0.1
+*Thu, 24 Nov 2022 20:44:20 +0000*
+- add app name for sentry release

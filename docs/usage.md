@@ -19,6 +19,9 @@ svc_versioning:
 
     # Create a new release in config/packages/sentry.yaml (if you use sentry)
     create_sentry_release: false
+
+    # Sentry application name (included in release)
+    sentry_app_name:      ~
 ```
 
 ## Call

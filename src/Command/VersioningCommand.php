@@ -38,7 +38,8 @@ class VersioningCommand extends Command
     private readonly bool $run_git,
     private readonly bool $run_deploy,
     private readonly ?string $pre_command,
-    private readonly bool $createSentryRelease
+    private readonly bool $createSentryRelease,
+    private readonly ?string $sentryAppName
    ) {
     parent::__construct();
     $this->versionHandling = new ServiceVersionHandling();
@@ -91,18 +92,19 @@ class VersioningCommand extends Command
       $output->writeln('<error> Cannot write README.md </error>');
     }
 
+    // create Sentry release
+    if ($this->createSentryRelease) {
+      if (!$this->sentryReleaseHandling->WriteNewSentryRelease($newVersion, $this->sentryAppName, $io)) {
+        return Command::FAILURE;
+      }
+    }
+
     if ($this->run_git) {
       $res = shell_exec('git add .');
       $res = shell_exec('git commit -S -m "' . $commitMessage . '"');
       $res = shell_exec('git push');
       $res = shell_exec('git tag -a -s v' . $newVersion . ' -m "' . $commitMessage . '"');
       $res = shell_exec('git push origin v' . $newVersion);
-    }
-
-    if ($this->createSentryRelease) {
-      if (!$this->sentryReleaseHandling->WriteNewSentryRelease($newVersion, $io)) {
-        return Command::FAILURE;
-      }
     }
 
     // runs easycorp/easy-deploy-bundle

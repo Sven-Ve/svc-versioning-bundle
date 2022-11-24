@@ -48,3 +48,9 @@
 ## Version 3.0.1
 *Mon, 30 May 2022 11:21:35 +0000*
 - move commands to the new AsCommand syntax
+
+
+## Version 4.0.0
+*Thu, 24 Nov 2022 19:57:31 +0000*
+- build with Symfony 6.1 bundle features, runs only with symfony 6.
+-add sentry release handling and config parameter

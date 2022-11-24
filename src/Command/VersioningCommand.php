@@ -2,6 +2,7 @@
 
 namespace Svc\VersioningBundle\Command;
 
+use Svc\VersioningBundle\Service\SentryReleaseHandling;
 use Svc\VersioningBundle\Service\VersionHandling as ServiceVersionHandling;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -13,8 +14,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-  name: 'app:versioning',
-  description: 'Versioning application, prepare releasing to prod.',
+  name: 'svc_versioning:new',
+  description: 'Create a new application version, prepare and release it to prod.',
   hidden: false
 )]
 class VersioningCommand extends Command
@@ -31,10 +32,17 @@ class VersioningCommand extends Command
 
   private readonly ServiceVersionHandling $versionHandling;
 
-  public function __construct(private readonly bool $run_git, private readonly bool $run_deploy, private readonly ?string $pre_command)
-  {
+  private readonly SentryReleaseHandling $sentryReleaseHandling;
+
+  public function __construct(
+    private readonly bool $run_git,
+    private readonly bool $run_deploy,
+    private readonly ?string $pre_command,
+    private readonly bool $createSentryRelease
+   ) {
     parent::__construct();
     $this->versionHandling = new ServiceVersionHandling();
+    $this->sentryReleaseHandling = new SentryReleaseHandling();
   }
 
   protected function execute(InputInterface $input, OutputInterface $output): int
@@ -45,7 +53,7 @@ class VersioningCommand extends Command
       $io->writeln('Running pre command: ' . $this->pre_command);
       system($this->pre_command, $res);
       if ($res > 0) {
-        $output->writeln('<error> Error during execution pre command. Versioning cannceled. </error>');
+        $output->writeln('<error> Error during execution pre command. Versioning canceled. </error>');
 
         return Command::FAILURE;
       }
@@ -89,6 +97,12 @@ class VersioningCommand extends Command
       $res = shell_exec('git push');
       $res = shell_exec('git tag -a -s v' . $newVersion . ' -m "' . $commitMessage . '"');
       $res = shell_exec('git push origin v' . $newVersion);
+    }
+
+    if ($this->createSentryRelease) {
+      if (!$this->sentryReleaseHandling->WriteNewSentryRelease($newVersion, $io)) {
+        return Command::FAILURE;
+      }
     }
 
     // runs easycorp/easy-deploy-bundle

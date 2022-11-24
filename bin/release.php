@@ -1,13 +1,13 @@
 #!/usr/bin/env php
 <?php
 
-$version = "3.0.1";
-$message = "move commands to the new AsCommand syntax";
+$version = "4.0.0";
+$message = "build with Symfony 6.1 bundle features, runs only with symfony 6.\n-add sentry release handling and config parameter";
 
 echo("Running phpstan:\n");
 system("composer run-script phpstan", $res);
 if ($res>0) {
-  echo("\nError during execution phpstan. Releasing cannceled.\n");
+  echo("\nError during execution phpstan. Releasing canceled.\n");
   return 1;
 }
 

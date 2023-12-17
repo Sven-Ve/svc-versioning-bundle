@@ -64,3 +64,8 @@
 ## Version 5.0.0
 *Sun, 17 Dec 2023 16:00:23 +0000*
 - ready for symfony 6.4 and 7
+
+
+## Version 5.0.1
+*Sun, 17 Dec 2023 20:26:42 +0000*
+- ready for symfony 6.4 and 7 - fixed type declarations

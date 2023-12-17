@@ -20,7 +20,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class VersioningCommand extends Command
 {
-  protected function configure()
+  protected function configure(): void
   {
     $this
       ->addOption('major', null, InputOption::VALUE_NONE, 'Add major version')

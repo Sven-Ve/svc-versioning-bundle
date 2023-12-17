@@ -59,3 +59,8 @@
 ## Version 4.0.1
 *Thu, 24 Nov 2022 20:44:20 +0000*
 - add app name for sentry release
+
+
+## Version 5.0.0
+*Sun, 17 Dec 2023 16:00:23 +0000*
+- ready for symfony 6.4 and 7

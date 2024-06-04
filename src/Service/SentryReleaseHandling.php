@@ -22,7 +22,7 @@ class SentryReleaseHandling
     $release = $version;
     if ($sentryAppName) {
       $sentryAppName = preg_replace('/\s+/', '', $sentryAppName);
-      $release = $sentryAppName . "@" . $release;
+      $release = $sentryAppName . '@' . $release;
     }
     if (array_key_exists('when@dev', $yamlArray) and isset($yamlArray['when@dev']['sentry'])) {
       $yamlArray['when@dev']['sentry']['options']['release'] = $release;

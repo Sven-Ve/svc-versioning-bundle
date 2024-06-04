@@ -69,3 +69,8 @@
 ## Version 5.0.1
 *Sun, 17 Dec 2023 20:26:42 +0000*
 - ready for symfony 6.4 and 7 - fixed type declarations
+
+
+## Version 5.1.0
+*Tue, 04 Jun 2024 19:19:36 +0000*
+- add parameter deploy_command for custom deployments

@@ -17,6 +17,9 @@ svc_versioning:
     # e.q. pre_command: composer run-script phpstan
     pre_command: ~
 
+    # run this command for deployment, disable default deployment with easycorp/easy-deploy-bundle
+    deploy_command: ~
+
     # Create a new release in config/packages/sentry.yaml (if you use sentry)
     create_sentry_release: false
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-$version = "5.0.1";
-$message = "ready for symfony 6.4 and 7 - fixed type declarations";
+$version = "5.1.0";
+$message = "add parameter deploy_command for custom deployments";
 
 echo("Running phpstan:\n");
 system("composer run-script phpstan", $res);

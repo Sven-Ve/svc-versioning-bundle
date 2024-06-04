@@ -39,8 +39,9 @@ class VersioningCommand extends Command
     private readonly bool $run_deploy,
     private readonly ?string $pre_command,
     private readonly bool $createSentryRelease,
-    private readonly ?string $sentryAppName
-   ) {
+    private readonly ?string $sentryAppName,
+    private readonly ?string $deployCommand
+  ) {
     parent::__construct();
     $this->versionHandling = new ServiceVersionHandling();
     $this->sentryReleaseHandling = new SentryReleaseHandling();
@@ -108,10 +109,21 @@ class VersioningCommand extends Command
     }
 
     // runs easycorp/easy-deploy-bundle
-    if ($this->run_deploy) {
+    if ($this->run_deploy and $this->deployCommand === null) {
       $deployCommand = $this->getApplication()->find('deploy');
       $emptyInput = new ArrayInput([]);
       $returnCode = $deployCommand->run($emptyInput, $output);
+    }
+
+    // runs other deploy commands
+    if ($this->deployCommand) {
+      $io->writeln('Running deploy command: ' . $this->deployCommand);
+      system($this->deployCommand, $res);
+      if ($res > 0) {
+        $output->writeln('<error> Error during execution deploy command. Versioning canceled. </error>');
+
+        return Command::FAILURE;
+      }
     }
 
     return Command::SUCCESS;

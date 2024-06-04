@@ -21,6 +21,7 @@ class SvcVersioningBundle extends AbstractBundle
         ->booleanNode('run_git')->defaultTrue()->info('Should git runs after version increase?')->end()
         ->booleanNode('run_deploy')->defaultTrue()->info('Should deploy runs after git?')->end()
         ->scalarNode('pre_command')->info('run this command before start versioning, stop on error (e.q. phpstan, tests, ...)')->end()
+        ->scalarNode('deploy_command')->info('run this command for deployment, disable default deployment with easycorp/easy-deploy-bundle')->end()
         ->booleanNode('create_sentry_release')->defaultFalse()->info('Create a new release in config/packages/sentry.yaml')->end()
         ->scalarNode('sentry_app_name')->info('Sentry application name (included in release)')->end()
       ->end();
@@ -36,6 +37,7 @@ class SvcVersioningBundle extends AbstractBundle
       ->arg(1, $config['run_deploy'])
       ->arg(2, $config['pre_command'] ?? null)
       ->arg(3, $config['create_sentry_release'])
-      ->arg(4, $config['sentry_app_name'] ?? null);
+      ->arg(4, $config['sentry_app_name'] ?? null)
+      ->arg(5, $config['deploy_command'] ?? null);
   }
 }

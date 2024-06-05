@@ -74,3 +74,8 @@
 ## Version 5.1.0
 *Tue, 04 Jun 2024 19:19:36 +0000*
 - add parameter deploy_command for custom deployments
+
+
+## Version 5.2.0
+*Wed, 05 Jun 2024 19:18:40 +0000*
+- add ansible deployment

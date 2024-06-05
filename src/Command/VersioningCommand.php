@@ -40,7 +40,10 @@ class VersioningCommand extends Command
     private readonly ?string $pre_command,
     private readonly bool $createSentryRelease,
     private readonly ?string $sentryAppName,
-    private readonly ?string $deployCommand
+    private readonly ?string $deployCommand,
+    private readonly bool $ansibleDeploy,
+    private readonly ?string $ansibleInventory,
+    private readonly ?string $ansiblePlaybook,
   ) {
     parent::__construct();
     $this->versionHandling = new ServiceVersionHandling();
@@ -121,6 +124,28 @@ class VersioningCommand extends Command
       system($this->deployCommand, $res);
       if ($res > 0) {
         $output->writeln('<error> Error during execution deploy command. Versioning canceled. </error>');
+
+        return Command::FAILURE;
+      }
+    }
+
+    // run ansible deploy
+    if ($this->ansibleDeploy) {
+      if (!$this->ansiblePlaybook)
+      {
+        $output->writeln('<error> ansible_deploy is true - but no playbook defined (parameter ansible_playbook). </error>');
+        return Command::FAILURE;
+      }
+      $ansibleCommand = "ansible-playbook";
+      if ($this->ansibleInventory) {
+        $ansibleCommand.=" -i " . $this->ansibleInventory;
+      }
+      $ansibleCommand.=" ".$this->ansiblePlaybook;
+
+      $io->writeln('Running ansible deploy command: ' . $ansibleCommand);
+      system($ansibleCommand, $res);
+      if ($res > 0) {
+        $output->writeln('<error> Error during execution ansible deploy command. Versioning canceled. </error>');
 
         return Command::FAILURE;
       }

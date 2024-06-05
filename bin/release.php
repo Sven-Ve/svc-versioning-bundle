@@ -1,8 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-$version = "5.1.0";
-$message = "add parameter deploy_command for custom deployments";
+$version = "5.2.0";
+$message = "add ansible deployment";
 
 echo("Running phpstan:\n");
 system("composer run-script phpstan", $res);

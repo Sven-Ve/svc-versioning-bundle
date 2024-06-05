@@ -10,15 +10,24 @@ svc_versioning:
     # should git checkin and push runs? Have to be configured first.
     run_git: true
 
-    # should easycorp/easy-deploy-bundle runs? Have to be installed and configured first.
-    run_deploy: true
-
     # run this command before start versioning, stop on error (e.q. phpstan, tests, ...)'
     # e.q. pre_command: composer run-script phpstan
     pre_command: ~
+    
+    # should easycorp/easy-deploy-bundle runs? Have to be installed and configured first.
+    run_deploy: true
 
     # run this command for deployment, disable default deployment with easycorp/easy-deploy-bundle
     deploy_command: ~
+
+    # Deploy via Ansible
+    ansible_deploy:       false
+
+    # if ansible_deploy==true the name of the inventory file (default="inventory.yaml")
+    ansible_inventory:    inventory.yaml
+
+    # if ansible_deploy==true the name of the ansible playbook
+    ansible_playbook:     ~
 
     # Create a new release in config/packages/sentry.yaml (if you use sentry)
     create_sentry_release: false

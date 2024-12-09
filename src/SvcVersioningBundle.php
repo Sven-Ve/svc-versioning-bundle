@@ -22,7 +22,7 @@ class SvcVersioningBundle extends AbstractBundle
         ->booleanNode('run_deploy')->defaultTrue()->info('Should deploy runs after git?')->end()
         ->scalarNode('deploy_command')->info('run this command for deployment, disable default deployment with easycorp/easy-deploy-bundle')->end()
         ->booleanNode('ansible_deploy')->defaultFalse()->info('Deploy via Ansible')->end()
-        ->scalarNode('ansible_inventory')->defaultValue("inventory.yaml")->info('if ansible_deploy==true the name of the inventory file (default="inventory.yaml")')->end()
+        ->scalarNode('ansible_inventory')->defaultValue('inventory.yaml')->info('if ansible_deploy==true the name of the inventory file (default="inventory.yaml")')->end()
         ->scalarNode('ansible_playbook')->info('if ansible_deploy==true the name of the ansible playbook')->end()
         ->scalarNode('pre_command')->info('run this command before start versioning, stop on error (e.q. phpstan, tests, ...)')->end()
         ->scalarNode('deploy_command')->info('run this command for deployment, disable default deployment with easycorp/easy-deploy-bundle')->end()

@@ -79,3 +79,8 @@
 ## Version 5.2.0
 *Wed, 05 Jun 2024 19:18:40 +0000*
 - add ansible deployment
+
+
+## Version 5.3.0
+*Mon, 09 Dec 2024 08:30:29 +0000*
+- new command syntax

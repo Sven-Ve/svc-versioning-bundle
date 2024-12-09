@@ -14,9 +14,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-  name: 'svc_versioning:new',
+  name: 'svc:versioning:new',
   description: 'Create a new application version, prepare and release it to prod.',
-  hidden: false
+  hidden: false,
+  aliases: ['svc_versioning:new'],
 )]
 class VersioningCommand extends Command
 {
@@ -131,16 +132,16 @@ class VersioningCommand extends Command
 
     // run ansible deploy
     if ($this->ansibleDeploy) {
-      if (!$this->ansiblePlaybook)
-      {
+      if (!$this->ansiblePlaybook) {
         $output->writeln('<error> ansible_deploy is true - but no playbook defined (parameter ansible_playbook). </error>');
+
         return Command::FAILURE;
       }
-      $ansibleCommand = "ansible-playbook";
+      $ansibleCommand = 'ansible-playbook';
       if ($this->ansibleInventory) {
-        $ansibleCommand.=" -i " . $this->ansibleInventory;
+        $ansibleCommand .= ' -i ' . $this->ansibleInventory;
       }
-      $ansibleCommand.=" ".$this->ansiblePlaybook;
+      $ansibleCommand .= ' ' . $this->ansiblePlaybook;
 
       $io->writeln('Running ansible deploy command: ' . $ansibleCommand);
       system($ansibleCommand, $res);

@@ -39,13 +39,13 @@ svc_versioning:
 ## Call
 
 ```console
-$ bin/console svc_versioning:new
+$ bin/console svc:versioning:new
 ```
 
 ## Parameter
 
 ```console
-$ bin/console svc_versioning:new --help
+$ bin/console svc:versioning:new --help
 Description:
   Create a new application version, prepare and release it to prod.
 

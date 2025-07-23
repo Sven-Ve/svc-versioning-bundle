@@ -29,7 +29,11 @@ class SvcVersioningBundleTest extends TestCase
     {
         $path = $this->bundle->getPath();
 
-        $this->assertStringEndsWith('SvcVersioningBundle', $path);
+        // The path should end with either 'SvcVersioningBundle' (local) or 'svc-versioning-bundle' (CI)
+        $this->assertTrue(
+            str_ends_with($path, 'SvcVersioningBundle') || str_ends_with($path, 'svc-versioning-bundle'),
+            "Path '{$path}' should end with 'SvcVersioningBundle' or 'svc-versioning-bundle'"
+        );
         $this->assertTrue(is_dir($path));
     }
 

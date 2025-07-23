@@ -10,8 +10,8 @@
  * file that was distributed with this source code.
  */
 
-$version = '5.3.0';
-$message = 'new command syntax';
+$version = '5.4.0';
+$message = 'add tests for versioning and improve documentation';
 
 echo "Running phpstan:\n";
 system('composer run-script phpstan', $res);

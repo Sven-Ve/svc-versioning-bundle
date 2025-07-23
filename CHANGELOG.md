@@ -84,3 +84,8 @@
 ## Version 5.3.0
 *Mon, 09 Dec 2024 08:30:29 +0000*
 - new command syntax
+
+
+## Version 5.4.0
+*Wed, 23 Jul 2025 15:12:06 +0000*
+- add tests for versioning and improve documentation

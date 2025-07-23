@@ -27,7 +27,7 @@
   },
   "scripts": {
     "phpstan": "vendor/bin/phpstan analyse src/ --level 5 -c .phpstan.neon",
-    "test": "php vendor/bin/phpunit --testdox"
+    "test": "vendor/bin/phpunit --testdox"
   },
   "require-dev": {
     "phpstan/phpstan": "^2.1",

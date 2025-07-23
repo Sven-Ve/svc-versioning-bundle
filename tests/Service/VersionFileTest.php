@@ -2,6 +2,15 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of the svc-versioning bundle.
+ *
+ * (c) 2025 Sven Vetter <dev@sv-systems.com>.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Svc\VersioningBundle\Tests\Service;
 
 use PHPUnit\Framework\TestCase;
@@ -10,6 +19,7 @@ use Svc\VersioningBundle\Service\VersionFile;
 class VersionFileTest extends TestCase
 {
     private VersionFile $versionFile;
+
     private string $tempDir;
 
     protected function setUp(): void
@@ -30,7 +40,7 @@ class VersionFileTest extends TestCase
         if (!is_dir($dir)) {
             return;
         }
-        
+
         $files = array_diff(scandir($dir), ['.', '..']);
         foreach ($files as $file) {
             $filePath = $dir . DIRECTORY_SEPARATOR . $file;
@@ -47,16 +57,16 @@ class VersionFileTest extends TestCase
     {
         $newPath = '/custom/path';
         $this->versionFile->setPath($newPath);
-        
+
         $filename = $this->versionFile->getFilename();
-        
+
         $this->assertEquals($newPath . DIRECTORY_SEPARATOR . '.version', $filename);
     }
 
     public function testGetFilename(): void
     {
         $filename = $this->versionFile->getFilename();
-        
+
         $expectedFilename = $this->tempDir . DIRECTORY_SEPARATOR . '.version';
         $this->assertEquals($expectedFilename, $filename);
     }
@@ -65,18 +75,18 @@ class VersionFileTest extends TestCase
     {
         $filename = $this->versionFile->getFilename();
         file_put_contents($filename, '1.0.0');
-        
+
         $result = $this->versionFile->isValid($filename);
-        
+
         $this->assertTrue($result);
     }
 
     public function testIsValidReturnsFalseForNonExistentFile(): void
     {
         $filename = $this->tempDir . '/nonexistent.version';
-        
+
         $result = $this->versionFile->isValid($filename);
-        
+
         $this->assertFalse($result);
     }
 
@@ -84,10 +94,10 @@ class VersionFileTest extends TestCase
     {
         $filename = $this->versionFile->getFilename();
         $content = '2.5.10';
-        
+
         $writeResult = $this->versionFile->write($filename, $content);
         $this->assertTrue($writeResult);
-        
+
         $readResult = $this->versionFile->read($filename);
         $this->assertEquals($content, $readResult);
     }
@@ -97,12 +107,12 @@ class VersionFileTest extends TestCase
         $filename = $this->versionFile->getFilename();
         $firstContent = 'First line';
         $secondContent = 'Second line';
-        
+
         $this->versionFile->write($filename, $firstContent);
         $writeResult = $this->versionFile->write($filename, $secondContent, true);
-        
+
         $this->assertTrue($writeResult);
-        
+
         $readResult = $this->versionFile->read($filename);
         $this->assertEquals($firstContent . $secondContent, $readResult);
     }
@@ -112,12 +122,12 @@ class VersionFileTest extends TestCase
         $filename = $this->versionFile->getFilename();
         $firstContent = 'First content';
         $secondContent = 'Second content';
-        
+
         $this->versionFile->write($filename, $firstContent);
         $writeResult = $this->versionFile->write($filename, $secondContent, false);
-        
+
         $this->assertTrue($writeResult);
-        
+
         $readResult = $this->versionFile->read($filename);
         $this->assertEquals($secondContent, $readResult);
     }
@@ -126,19 +136,19 @@ class VersionFileTest extends TestCase
     {
         $filename = $this->versionFile->getFilename();
         $contentWithWhitespace = "  1.2.3  \n\t";
-        
+
         $this->versionFile->write($filename, $contentWithWhitespace);
         $readResult = $this->versionFile->read($filename);
-        
+
         $this->assertEquals('1.2.3', $readResult);
     }
 
     public function testWriteReturnsFalseForInvalidPath(): void
     {
         $invalidFilename = '/invalid/path/that/does/not/exist/.version';
-        
+
         $result = $this->versionFile->write($invalidFilename, '1.0.0');
-        
+
         $this->assertFalse($result);
     }
 }

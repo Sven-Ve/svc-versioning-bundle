@@ -2,20 +2,32 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of the svc-versioning bundle.
+ *
+ * (c) 2025 Sven Vetter <dev@sv-systems.com>.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Svc\VersioningBundle\Tests\Service;
 
 use PHPUnit\Framework\TestCase;
 use Svc\VersioningBundle\Service\SentryReleaseHandling;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Yaml;
 
 class SentryReleaseHandlingTest extends TestCase
 {
     private SentryReleaseHandling $sentryReleaseHandling;
+
     private string $tempDir;
+
     private string $originalDir;
+
     private SymfonyStyle $io;
 
     protected function setUp(): void
@@ -26,9 +38,9 @@ class SentryReleaseHandlingTest extends TestCase
         mkdir($this->tempDir . '/config');
         mkdir($this->tempDir . '/config/packages');
         chdir($this->tempDir);
-        
+
         $this->sentryReleaseHandling = new SentryReleaseHandling();
-        
+
         $input = new ArrayInput([]);
         $output = new BufferedOutput();
         $this->io = new SymfonyStyle($input, $output);
@@ -45,7 +57,7 @@ class SentryReleaseHandlingTest extends TestCase
         if (!is_dir($dir)) {
             return;
         }
-        
+
         $files = array_diff(scandir($dir), ['.', '..']);
         foreach ($files as $file) {
             $filePath = $dir . DIRECTORY_SEPARATOR . $file;
@@ -64,17 +76,17 @@ class SentryReleaseHandlingTest extends TestCase
             'sentry' => [
                 'dsn' => 'https://example@sentry.io/123456',
                 'options' => [
-                    'environment' => 'prod'
-                ]
-            ]
+                    'environment' => 'prod',
+                ],
+            ],
         ];
-        
+
         file_put_contents('config/packages/sentry.yaml', Yaml::dump($sentryConfig));
-        
+
         $result = $this->sentryReleaseHandling->WriteNewSentryRelease('1.2.3', null, $this->io);
-        
+
         $this->assertTrue($result);
-        
+
         $updatedConfig = Yaml::parseFile('config/packages/sentry.yaml');
         $this->assertEquals('1.2.3', $updatedConfig['sentry']['options']['release']);
     }
@@ -85,17 +97,17 @@ class SentryReleaseHandlingTest extends TestCase
             'sentry' => [
                 'dsn' => 'https://example@sentry.io/123456',
                 'options' => [
-                    'environment' => 'prod'
-                ]
-            ]
+                    'environment' => 'prod',
+                ],
+            ],
         ];
-        
+
         file_put_contents('config/packages/sentry.yaml', Yaml::dump($sentryConfig));
-        
+
         $result = $this->sentryReleaseHandling->WriteNewSentryRelease('1.2.3', 'MyApp', $this->io);
-        
+
         $this->assertTrue($result);
-        
+
         $updatedConfig = Yaml::parseFile('config/packages/sentry.yaml');
         $this->assertEquals('MyApp@1.2.3', $updatedConfig['sentry']['options']['release']);
     }
@@ -106,17 +118,17 @@ class SentryReleaseHandlingTest extends TestCase
             'sentry' => [
                 'dsn' => 'https://example@sentry.io/123456',
                 'options' => [
-                    'environment' => 'prod'
-                ]
-            ]
+                    'environment' => 'prod',
+                ],
+            ],
         ];
-        
+
         file_put_contents('config/packages/sentry.yaml', Yaml::dump($sentryConfig));
-        
+
         $result = $this->sentryReleaseHandling->WriteNewSentryRelease('1.2.3', 'My App Name', $this->io);
-        
+
         $this->assertTrue($result);
-        
+
         $updatedConfig = Yaml::parseFile('config/packages/sentry.yaml');
         $this->assertEquals('MyAppName@1.2.3', $updatedConfig['sentry']['options']['release']);
     }
@@ -128,34 +140,34 @@ class SentryReleaseHandlingTest extends TestCase
                 'sentry' => [
                     'dsn' => 'https://dev@sentry.io/123456',
                     'options' => [
-                        'environment' => 'dev'
-                    ]
-                ]
+                        'environment' => 'dev',
+                    ],
+                ],
             ],
             'when@prod' => [
                 'sentry' => [
                     'dsn' => 'https://prod@sentry.io/123456',
                     'options' => [
-                        'environment' => 'prod'
-                    ]
-                ]
+                        'environment' => 'prod',
+                    ],
+                ],
             ],
             'when@test' => [
                 'sentry' => [
                     'dsn' => 'https://test@sentry.io/123456',
                     'options' => [
-                        'environment' => 'test'
-                    ]
-                ]
-            ]
+                        'environment' => 'test',
+                    ],
+                ],
+            ],
         ];
-        
+
         file_put_contents('config/packages/sentry.yaml', Yaml::dump($sentryConfig));
-        
+
         $result = $this->sentryReleaseHandling->WriteNewSentryRelease('2.0.0', 'TestApp', $this->io);
-        
+
         $this->assertTrue($result);
-        
+
         $updatedConfig = Yaml::parseFile('config/packages/sentry.yaml');
         $this->assertEquals('TestApp@2.0.0', $updatedConfig['when@dev']['sentry']['options']['release']);
         $this->assertEquals('TestApp@2.0.0', $updatedConfig['when@prod']['sentry']['options']['release']);
@@ -165,16 +177,16 @@ class SentryReleaseHandlingTest extends TestCase
     public function testWriteNewSentryReleaseReturnsFalseWhenFileNotFound(): void
     {
         $result = $this->sentryReleaseHandling->WriteNewSentryRelease('1.0.0', null, $this->io);
-        
+
         $this->assertFalse($result);
     }
 
     public function testWriteNewSentryReleaseReturnsFalseForInvalidYaml(): void
     {
         file_put_contents('config/packages/sentry.yaml', 'invalid: yaml: content: [');
-        
+
         $result = $this->sentryReleaseHandling->WriteNewSentryRelease('1.0.0', null, $this->io);
-        
+
         $this->assertFalse($result);
     }
 
@@ -185,21 +197,21 @@ class SentryReleaseHandlingTest extends TestCase
                 'sentry' => [
                     'dsn' => 'https://prod@sentry.io/123456',
                     'options' => [
-                        'environment' => 'prod'
-                    ]
-                ]
+                        'environment' => 'prod',
+                    ],
+                ],
             ],
             'sentry' => [
-                'dsn' => 'https://example@sentry.io/123456'
-            ]
+                'dsn' => 'https://example@sentry.io/123456',
+            ],
         ];
-        
+
         file_put_contents('config/packages/sentry.yaml', Yaml::dump($sentryConfig));
-        
+
         $result = $this->sentryReleaseHandling->WriteNewSentryRelease('1.5.0', null, $this->io);
-        
+
         $this->assertTrue($result);
-        
+
         $updatedConfig = Yaml::parseFile('config/packages/sentry.yaml');
         $this->assertEquals('1.5.0', $updatedConfig['when@prod']['sentry']['options']['release']);
         $this->assertEquals('1.5.0', $updatedConfig['sentry']['options']['release']);
@@ -212,18 +224,18 @@ class SentryReleaseHandlingTest extends TestCase
                 'sentry' => [
                     'dsn' => 'https://prod@sentry.io/123456',
                     'options' => [
-                        'environment' => 'prod'
-                    ]
-                ]
-            ]
+                        'environment' => 'prod',
+                    ],
+                ],
+            ],
         ];
-        
+
         file_put_contents('config/packages/sentry.yaml', Yaml::dump($sentryConfig));
-        
+
         $result = $this->sentryReleaseHandling->WriteNewSentryRelease('1.0.0', null, $this->io);
-        
+
         $this->assertTrue($result);
-        
+
         $updatedConfig = Yaml::parseFile('config/packages/sentry.yaml');
         $this->assertArrayNotHasKey('when@dev', $updatedConfig);
         $this->assertArrayNotHasKey('when@test', $updatedConfig);

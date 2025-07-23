@@ -2,7 +2,10 @@
 
 $year = date('Y');
 $finder = PhpCsFixer\Finder::create()
-    ->in(__DIR__.'/src')
+    ->in(__DIR__)
+    ->exclude('var')
+    ->exclude('public')
+    ->exclude('vendor');
 ;
 $config = new PhpCsFixer\Config();
 return $config

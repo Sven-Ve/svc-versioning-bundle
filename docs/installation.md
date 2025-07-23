@@ -36,6 +36,6 @@ in the `config/bundles.php` file of your project:
 
 return [
     // ...
-    Svc\UtilBundle\SvcVersioningBundle::class => ['all' => true],
+    Svc\VersioningBundle\SvcVersioningBundle::class => ['all' => true],
 ];
 ```

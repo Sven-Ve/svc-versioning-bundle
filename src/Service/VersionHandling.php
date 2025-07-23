@@ -21,7 +21,7 @@ class VersionHandling
   /**
    * get a new version.
    */
-  public function getNewVersion(string $version, bool $majorVer, bool $minorVer, bool $patchVer, bool $init = false): string
+  public function getNewVersion(?string $version, bool $majorVer, bool $minorVer, bool $patchVer, bool $init = false): string
   {
     if ($init) {
       $newVersion = $this->versionString->getInitial();

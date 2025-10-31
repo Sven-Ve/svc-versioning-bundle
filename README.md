@@ -1,7 +1,7 @@
 # SvcVersioningBundle
 
 [![CI](https://github.com/Sven-Ve/svc-versioning-bundle/actions/workflows/php.yml/badge.svg)](https://github.com/Sven-Ve/svc-versioning-bundle/actions/workflows/php.yml)
-[![PHP Version](https://img.shields.io/badge/php-%3E%3D7.3-blue)](https://php.net/)
+[![PHP Version](https://img.shields.io/badge/php-%3E%3D8.2-blue)](https://php.net/)
 [![Symfony](https://img.shields.io/badge/symfony-6%20%7C%207-green)](https://symfony.com/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
@@ -35,6 +35,8 @@ bin/console svc:versioning:new --major  # 1.1.0 → 2.0.0
 - **🧪 Pre-deployment Validation**: Run tests, linting, or custom commands before release
 - **📊 Sentry Integration**: Automatic release tracking
 - **🔄 CI/CD Ready**: Perfect for automated pipelines
+- **💎 Modern PHP**: Built with PHP 8.2+ features (readonly properties, match expressions)
+- **🛡️ Type Safe**: Immutable value objects with PHPStan level 6 compliance
 
 ## 🎯 How It Works
 
@@ -64,7 +66,7 @@ When you run `bin/console svc:versioning:new`, the bundle:
 
 ## 🏗️ Requirements
 
-- **PHP**: 7.3+ or 8.x
+- **PHP**: 8.2+ (for readonly properties and modern features)
 - **Symfony**: 6.x or 7.x
 - **Git**: For version control operations (optional)
 

@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Svc\VersioningBundle\Service;
 
+use Svc\VersioningBundle\ValueObject\Version;
+
 class VersionHandling
 {
     private VersionString $versionString;
@@ -39,32 +41,24 @@ class VersionHandling
                 $version = $this->getCurrentVersion();
             }
 
-            $versionArray = $this->versionString->versionStringToVersionArray($version);
+            $currentVersion = $this->versionString->parse($version);
 
-            if (!$majorVer and !$minorVer) {
+            if (!$majorVer && !$minorVer) {
                 $patchVer = true;
             }
 
-            if ($majorVer) {
-                ++$versionArray['major'];
-                $versionArray['minor'] = 0;
-                $versionArray['patch'] = 0;
-            }
-            if ($minorVer) {
-                ++$versionArray['minor'];
-                $versionArray['patch'] = 0;
-            }
-            if ($patchVer) {
-                ++$versionArray['patch'];
-            }
-
-            $newVersion = $this->versionString->versionArrayToVersionString($versionArray);
+            $newVersion = match (true) {
+                $majorVer => $currentVersion->incrementMajor(),
+                $minorVer => $currentVersion->incrementMinor(),
+                $patchVer => $currentVersion->incrementPatch(),
+                default => $currentVersion,
+            };
         }
 
         $fileName = $this->versionFile->getFilename();
-        $this->versionFile->write($fileName, $newVersion);
+        $this->versionFile->write($fileName, $newVersion->toString());
 
-        return $newVersion;
+        return $newVersion->toString();
     }
 
     /**
@@ -74,13 +68,14 @@ class VersionHandling
     {
         $fileName = $this->versionFile->getFilename();
         if ($this->versionFile->isValid($fileName)) {
-            $version = $this->versionFile->read($fileName);
+            $versionString = $this->versionFile->read($fileName);
         } else {
             $version = $this->versionString->getInitial();
-            $this->versionFile->write($fileName, $version);
+            $versionString = $version->toString();
+            $this->versionFile->write($fileName, $versionString);
         }
 
-        return $version;
+        return $versionString;
     }
 
     /**

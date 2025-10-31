@@ -10,7 +10,7 @@ SvcVersioningBundle is a Symfony bundle that provides automated semantic version
 
 ### Development Commands
 - `composer install` - Install dependencies
-- `composer run-script phpstan` - Run static analysis (PHPStan level 5)
+- `composer run-script phpstan` - Run static analysis (PHPStan level 6)
 - `composer run-script test` or `vendor/bin/phpunit` - Run test suite
 - `composer validate --strict` - Validate composer.json and composer.lock
 
@@ -27,9 +27,16 @@ SvcVersioningBundle is a Symfony bundle that provides automated semantic version
 ### Bundle Structure
 - **SvcVersioningBundle** (`src/SvcVersioningBundle.php`): Main bundle class with configuration definition
 - **VersioningCommand** (`src/Command/VersioningCommand.php`): Console command for version management
+- **Value Objects**:
+  - `Version`: Immutable value object representing semantic versions (major.minor.patch)
+    - Readonly properties with PHP 8.2+ features
+    - Self-validating (no negative version numbers)
+    - Increment methods: `incrementMajor()`, `incrementMinor()`, `incrementPatch()`
+    - Comparison methods: `isGreaterThan()`, `equals()`
+    - Factory methods: `fromString()`, `initial()`
 - **Service Layer**:
   - `VersionHandling`: Core version logic and file operations
-  - `VersionString`: Version string parsing/formatting utilities
+  - `VersionString`: Version string parsing/formatting (delegates to Version value object)
   - `VersionFile`: File I/O operations for version files
   - `SentryReleaseHandling`: Optional Sentry integration
 
@@ -56,15 +63,45 @@ Bundle configuration is defined in `config/packages/svc_versioning.yaml` with op
 - `CHANGELOG.md` - Version history with timestamps
 
 ## Dependencies
-- PHP 7.3+ or 8.x
+- PHP 8.2+ (required for readonly properties and modern features)
 - Symfony 6 or 7 (console, http-kernel, dependency-injection, config, yaml)
 - Optional: easycorp/easy-deploy-bundle for deployment
-- PHPStan for static analysis
-- PHPUnit for testing
+- PHPStan 2.1+ for static analysis (level 6)
+- PHPUnit 12.4+ for testing
+
+## Modern PHP Features Used
+- **Readonly properties** (PHP 8.2): Immutable value objects
+- **Match expressions** (PHP 8.0): Clean version increment logic
+- **Constructor property promotion** (PHP 8.0): Concise value object definitions
+- **Named arguments** (PHP 8.0): Improved readability
+- **Typed properties** (PHP 7.4+): Strict type safety
+
+## Code Quality & Architecture Patterns
+
+### Domain-Driven Design (DDD)
+The bundle uses DDD principles with clear separation of concerns:
+- **Value Objects**: `Version` represents domain concepts with business rules
+- **Services**: Orchestrate operations without holding state
+- **Immutability**: Value objects cannot be modified after creation
+
+### Type Safety
+- PHPStan level 6 with strict rules
+- Full PHPDoc annotations for complex types
+- Readonly properties prevent accidental mutations
+- No mixed types or suppressed errors
+
+### Best Practices
+- **Immutable Value Objects**: All version operations return new instances
+- **Self-Validating Objects**: Invalid states are impossible to create
+- **Single Responsibility**: Each class has one clear purpose
+- **Explicit over Implicit**: Clear method names like `incrementMajor()` instead of cryptic operations
 
 ## Testing
 Comprehensive test suite covering all components:
+- **Value Object Tests**: Version value object with 20 tests covering immutability, validation, and comparisons
 - **Service Tests**: All service classes have unit tests with file system isolation
 - **Command Tests**: VersioningCommand tested with Symfony CommandTester
 - **Bundle Tests**: Configuration and dependency injection testing
 - **Test Configuration**: PHPUnit XML configuration with proper test structure
+- **Test Coverage**: 71 tests, 182 assertions
+- bitte changelog.md nicht direkt updaten. bin/release.php wird für den Release-prozess benutzt und dort wird der Release-Kommentar gepflegt

@@ -13,49 +13,31 @@ declare(strict_types=1);
 
 namespace Svc\VersioningBundle\Service;
 
+use Svc\VersioningBundle\ValueObject\Version;
+
 class VersionString
 {
-    private const VERSION_SEPARATOR = '.';
-
     /**
-     * @return array{major: int, minor: int, patch: int}
+     * Parses a version string into a Version object.
      */
-    public function versionStringToVersionArray(string $versionString): array
+    public function parse(string $versionString): Version
     {
-        $versionArray = $this->parser($versionString);
-
-        return [
-            'major' => intval($versionArray[0]),
-            'minor' => intval($versionArray[1]),
-            'patch' => intval($versionArray[2]),
-        ];
-    }
-
-    public function getInitial(): string
-    {
-        $format = '0%s0%s1';
-        $ret = sprintf($format, self::VERSION_SEPARATOR, self::VERSION_SEPARATOR);
-
-        return $ret;
+        return Version::fromString($versionString);
     }
 
     /**
-     * @param array{major: int, minor: int, patch: int} $versionArray
+     * Returns the initial version "0.0.1".
      */
-    public function versionArrayToVersionString(array $versionArray): string
+    public function getInitial(): Version
     {
-        return implode(self::VERSION_SEPARATOR, $versionArray);
+        return Version::initial();
     }
 
     /**
-     * convert version string (1.2.3) in an array.
-     *
-     * @return list<string>
+     * Converts a Version object to a string.
      */
-    private function parser(string $version): array
+    public function toString(Version $version): string
     {
-        $parts = explode('.', $version);
-
-        return $parts;
+        return $version->toString();
     }
 }

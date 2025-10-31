@@ -15,6 +15,7 @@ namespace Svc\VersioningBundle\Tests\Service;
 
 use PHPUnit\Framework\TestCase;
 use Svc\VersioningBundle\Service\VersionString;
+use Svc\VersioningBundle\ValueObject\Version;
 
 class VersionStringTest extends TestCase
 {
@@ -25,74 +26,56 @@ class VersionStringTest extends TestCase
         $this->versionString = new VersionString();
     }
 
-    public function testVersionStringToVersionArray(): void
+    public function testParse(): void
     {
-        $result = $this->versionString->versionStringToVersionArray('1.2.3');
+        $result = $this->versionString->parse('1.2.3');
 
-        $expected = [
-            'major' => 1,
-            'minor' => 2,
-            'patch' => 3,
-        ];
-
-        $this->assertEquals($expected, $result);
+        $this->assertInstanceOf(Version::class, $result);
+        $this->assertEquals(1, $result->major);
+        $this->assertEquals(2, $result->minor);
+        $this->assertEquals(3, $result->patch);
     }
 
-    public function testVersionStringToVersionArrayWithZeros(): void
+    public function testParseWithZeros(): void
     {
-        $result = $this->versionString->versionStringToVersionArray('0.0.1');
+        $result = $this->versionString->parse('0.0.1');
 
-        $expected = [
-            'major' => 0,
-            'minor' => 0,
-            'patch' => 1,
-        ];
-
-        $this->assertEquals($expected, $result);
+        $this->assertEquals(0, $result->major);
+        $this->assertEquals(0, $result->minor);
+        $this->assertEquals(1, $result->patch);
     }
 
-    public function testVersionStringToVersionArrayWithLargeNumbers(): void
+    public function testParseWithLargeNumbers(): void
     {
-        $result = $this->versionString->versionStringToVersionArray('10.25.999');
+        $result = $this->versionString->parse('10.25.999');
 
-        $expected = [
-            'major' => 10,
-            'minor' => 25,
-            'patch' => 999,
-        ];
-
-        $this->assertEquals($expected, $result);
+        $this->assertEquals(10, $result->major);
+        $this->assertEquals(25, $result->minor);
+        $this->assertEquals(999, $result->patch);
     }
 
     public function testGetInitial(): void
     {
         $result = $this->versionString->getInitial();
 
-        $this->assertEquals('0.0.1', $result);
+        $this->assertInstanceOf(Version::class, $result);
+        $this->assertEquals(0, $result->major);
+        $this->assertEquals(0, $result->minor);
+        $this->assertEquals(1, $result->patch);
     }
 
-    public function testVersionArrayToVersionString(): void
+    public function testToString(): void
     {
-        $versionArray = [
-            'major' => 2,
-            'minor' => 5,
-            'patch' => 10,
-        ];
-
-        $result = $this->versionString->versionArrayToVersionString($versionArray);
+        $version = new Version(2, 5, 10);
+        $result = $this->versionString->toString($version);
 
         $this->assertEquals('2.5.10', $result);
     }
 
-    public function testVersionArrayToVersionStringWithZeros(): void
+    public function testToStringWithZeros(): void
     {
-        $versionArray = [
-            'major' => 1,
-            'minor' => 0,
-            'patch' => 0,
-        ];
-
-        $result = $this->versionString->versionArrayToVersionString($versionArray);
+        $version = new Version(1, 0, 0);
+        $result = $this->versionString->toString($version);
 
         $this->assertEquals('1.0.0', $result);
     }
@@ -101,8 +84,8 @@ class VersionStringTest extends TestCase
     {
         $originalVersion = '3.14.159';
 
-        $versionArray = $this->versionString->versionStringToVersionArray($originalVersion);
-        $convertedBack = $this->versionString->versionArrayToVersionString($versionArray);
+        $version = $this->versionString->parse($originalVersion);
+        $convertedBack = $this->versionString->toString($version);
 
         $this->assertEquals($originalVersion, $convertedBack);
     }

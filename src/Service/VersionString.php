@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the svc-versioning bundle.
+ * This file is part of the SvcVersioning bundle.
  *
  * (c) 2025 Sven Vetter <dev@sv-systems.com>.
  *
@@ -17,6 +17,9 @@ class VersionString
 {
     private const VERSION_SEPARATOR = '.';
 
+    /**
+     * @return array{major: int, minor: int, patch: int}
+     */
     public function versionStringToVersionArray(string $versionString): array
     {
         $versionArray = $this->parser($versionString);
@@ -36,6 +39,9 @@ class VersionString
         return $ret;
     }
 
+    /**
+     * @param array{major: int, minor: int, patch: int} $versionArray
+     */
     public function versionArrayToVersionString(array $versionArray): string
     {
         return implode(self::VERSION_SEPARATOR, $versionArray);
@@ -43,6 +49,8 @@ class VersionString
 
     /**
      * convert version string (1.2.3) in an array.
+     *
+     * @return list<string>
      */
     private function parser(string $version): array
     {

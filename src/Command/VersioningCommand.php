@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /*
- * This file is part of the svc-versioning bundle.
+ * This file is part of the SvcVersioning bundle.
  *
  * (c) 2025 Sven Vetter <dev@sv-systems.com>.
  *

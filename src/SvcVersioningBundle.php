@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 /*
- * This file is part of the svc-versioning bundle.
+ * This file is part of the SvcVersioning bundle.
  *
  * (c) 2025 Sven Vetter <dev@sv-systems.com>.
  *
@@ -40,6 +42,9 @@ class SvcVersioningBundle extends AbstractBundle
           ->end();
     }
 
+    /**
+     * @param array<string, mixed> $config
+     */
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         $container->import('../config/services.yaml');

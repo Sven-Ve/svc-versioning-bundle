@@ -15,6 +15,8 @@ namespace Svc\VersioningBundle\Tests\Command;
 
 use PHPUnit\Framework\TestCase;
 use Svc\VersioningBundle\Command\VersioningCommand;
+use Svc\VersioningBundle\Service\SentryReleaseHandling;
+use Svc\VersioningBundle\Service\VersionHandling;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -37,6 +39,8 @@ class VersioningCommandTest extends TestCase
         chdir($this->tempDir);
 
         $this->command = new VersioningCommand(
+            versionHandling: new VersionHandling(),
+            sentryReleaseHandling: new SentryReleaseHandling(),
             run_git: false,
             run_deploy: false,
             pre_command: null,
@@ -201,6 +205,8 @@ class VersioningCommandTest extends TestCase
     public function testExecuteWithPreCommand(): void
     {
         $command = new VersioningCommand(
+            versionHandling: new VersionHandling(),
+            sentryReleaseHandling: new SentryReleaseHandling(),
             run_git: false,
             run_deploy: false,
             pre_command: 'echo "Running pre-command"',
@@ -224,6 +230,8 @@ class VersioningCommandTest extends TestCase
     public function testExecuteFailsWhenPreCommandFails(): void
     {
         $command = new VersioningCommand(
+            versionHandling: new VersionHandling(),
+            sentryReleaseHandling: new SentryReleaseHandling(),
             run_git: false,
             run_deploy: false,
             pre_command: 'exit 1',
@@ -247,6 +255,8 @@ class VersioningCommandTest extends TestCase
     public function testExecuteWithAnsibleDeployFailsWithoutPlaybook(): void
     {
         $command = new VersioningCommand(
+            versionHandling: new VersionHandling(),
+            sentryReleaseHandling: new SentryReleaseHandling(),
             run_git: false,
             run_deploy: false,
             pre_command: null,

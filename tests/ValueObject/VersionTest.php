@@ -69,6 +69,46 @@ class VersionTest extends TestCase
         $this->assertEquals(1, $version->patch);
     }
 
+    public function testFromStringWithInvalidFormatThrowsException(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid version format: 'abc.def.ghi'");
+
+        Version::fromString('abc.def.ghi');
+    }
+
+    public function testFromStringWithEmptyStringThrowsException(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid version format: ''");
+
+        Version::fromString('');
+    }
+
+    public function testFromStringWithMissingPartsThrowsException(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid version format: '1.2'");
+
+        Version::fromString('1.2');
+    }
+
+    public function testFromStringWithExtraPartsThrowsException(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid version format: '1.2.3.4'");
+
+        Version::fromString('1.2.3.4');
+    }
+
+    public function testFromStringWithNegativeNumbersThrowsException(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid version format: '1.-2.3'");
+
+        Version::fromString('1.-2.3');
+    }
+
     public function testInitial(): void
     {
         $version = Version::initial();

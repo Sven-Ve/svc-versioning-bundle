@@ -89,3 +89,8 @@
 ## Version 5.4.0
 *Wed, 23 Jul 2025 15:12:06 +0000*
 - add tests for versioning and improve documentation
+
+
+## Version 6.0.0
+*Fri, 31 Oct 2025 21:04:51 +0000*
+- needs php >= 8.2, introduce immutable Version value object and update version handling logic

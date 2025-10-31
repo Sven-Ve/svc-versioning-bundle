@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(composer run-script:*)",
-      "Bash(php vendor/bin/phpunit:*)"
+      "Bash(php vendor/bin/phpunit:*)",
+      "Bash(/opt/homebrew/bin/php-cs-fixer fix:*)"
     ],
     "deny": []
   }

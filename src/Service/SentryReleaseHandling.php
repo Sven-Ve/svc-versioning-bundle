@@ -35,16 +35,18 @@ class SentryReleaseHandling
             $sentryAppName = preg_replace('/\s+/', '', $sentryAppName);
             $release = $sentryAppName . '@' . $release;
         }
-        if (array_key_exists('when@dev', $yamlArray) and isset($yamlArray['when@dev']['sentry'])) {
+
+        // Update release in all environment configurations
+        if (isset($yamlArray['when@dev']['sentry'])) {
             $yamlArray['when@dev']['sentry']['options']['release'] = $release;
         }
-        if (array_key_exists('when@prod', $yamlArray) and isset($yamlArray['when@prod']['sentry'])) {
+        if (isset($yamlArray['when@prod']['sentry'])) {
             $yamlArray['when@prod']['sentry']['options']['release'] = $release;
         }
-        if (array_key_exists('when@test', $yamlArray) and isset($yamlArray['when@test']['sentry'])) {
+        if (isset($yamlArray['when@test']['sentry'])) {
             $yamlArray['when@test']['sentry']['options']['release'] = $release;
         }
-        if (array_key_exists('sentry', $yamlArray) and isset($yamlArray['sentry']['dsn'])) {
+        if (isset($yamlArray['sentry'])) {
             $yamlArray['sentry']['options']['release'] = $release;
         }
 

@@ -151,4 +151,31 @@ class VersionFileTest extends TestCase
 
         $this->assertFalse($result);
     }
+
+    public function testReadThrowsExceptionForNonExistentFile(): void
+    {
+        $nonExistentFile = $this->tempDir . '/nonexistent.version';
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage("Cannot read version file: $nonExistentFile");
+
+        $this->versionFile->read($nonExistentFile);
+    }
+
+    public function testReadThrowsExceptionForUnreadableFile(): void
+    {
+        $filename = $this->versionFile->getFilename();
+        file_put_contents($filename, '1.0.0');
+        chmod($filename, 0000); // Make file unreadable
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage("Cannot read version file: $filename");
+
+        try {
+            $this->versionFile->read($filename);
+        } finally {
+            // Cleanup: restore permissions
+            chmod($filename, 0644);
+        }
+    }
 }

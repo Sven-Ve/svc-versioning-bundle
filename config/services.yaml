@@ -1,7 +1,13 @@
 services:
   _defaults:
-#    autowire: true
+    autowire: true
     autoconfigure: true
     public: false
 
+  # Services
+  Svc\VersioningBundle\Service\VersionHandling:
+
+  Svc\VersioningBundle\Service\SentryReleaseHandling:
+
+  # Command (arguments are injected via loadExtension in SvcVersioningBundle)
   Svc\VersioningBundle\Command\VersioningCommand:

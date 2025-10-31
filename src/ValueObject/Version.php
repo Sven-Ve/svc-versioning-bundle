@@ -32,15 +32,21 @@ final readonly class Version
 
     /**
      * Creates a Version from a string like "1.2.3".
+     *
+     * @throws \InvalidArgumentException if version string format is invalid
      */
     public static function fromString(string $version): self
     {
+        if (!preg_match('/^\d+\.\d+\.\d+$/', $version)) {
+            throw new \InvalidArgumentException("Invalid version format: '$version'. Expected format: 'major.minor.patch' (e.g., '1.2.3')");
+        }
+
         $parts = explode(self::VERSION_SEPARATOR, $version);
 
         return new self(
             (int) $parts[0],
-            (int) ($parts[1] ?? 0),
-            (int) ($parts[2] ?? 0),
+            (int) $parts[1],
+            (int) $parts[2],
         );
     }
 

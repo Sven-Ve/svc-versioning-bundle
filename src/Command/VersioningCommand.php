@@ -42,11 +42,9 @@ class VersioningCommand extends Command
           ->addArgument('commitMessage', InputArgument::OPTIONAL, 'Commit message');
     }
 
-    private readonly ServiceVersionHandling $versionHandling;
-
-    private readonly SentryReleaseHandling $sentryReleaseHandling;
-
     public function __construct(
+        private readonly ServiceVersionHandling $versionHandling,
+        private readonly SentryReleaseHandling $sentryReleaseHandling,
         private readonly bool $run_git,
         private readonly bool $run_deploy,
         private readonly ?string $pre_command,
@@ -58,8 +56,6 @@ class VersioningCommand extends Command
         private readonly ?string $ansiblePlaybook,
     ) {
         parent::__construct();
-        $this->versionHandling = new ServiceVersionHandling();
-        $this->sentryReleaseHandling = new SentryReleaseHandling();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -67,6 +63,7 @@ class VersioningCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         if ($this->pre_command) {
+            $this->validateCommand($this->pre_command);
             $io->writeln('Running pre command: ' . $this->pre_command);
             system($this->pre_command, $res);
             if ($res > 0) {
@@ -105,7 +102,7 @@ class VersioningCommand extends Command
         }
 
         if (!$this->versionHandling->appendCHANGELOG('CHANGELOG.md', $newVersion, $commitMessage)) {
-            $output->writeln('<error> Cannot write README.md </error>');
+            $output->writeln('<error> Cannot write CHANGELOG.md </error>');
         }
 
         // create Sentry release
@@ -116,15 +113,47 @@ class VersioningCommand extends Command
         }
 
         if ($this->run_git) {
-            $res = shell_exec('git add .');
-            $res = shell_exec('git commit -S -m "' . $commitMessage . '"');
-            $res = shell_exec('git push');
-            $res = shell_exec('git tag -a -s v' . $newVersion . ' -m "' . $commitMessage . '"');
-            $res = shell_exec('git push origin v' . $newVersion);
+            $escapedMessage = escapeshellarg($commitMessage);
+            $escapedVersion = escapeshellarg('v' . $newVersion);
+
+            exec('git add .', $output, $returnCode);
+            if ($returnCode !== 0) {
+                $io->error('Git add failed');
+
+                return Command::FAILURE;
+            }
+
+            exec("git commit -S -m $escapedMessage", $output, $returnCode);
+            if ($returnCode !== 0) {
+                $io->error('Git commit failed');
+
+                return Command::FAILURE;
+            }
+
+            exec('git push', $output, $returnCode);
+            if ($returnCode !== 0) {
+                $io->error('Git push failed');
+
+                return Command::FAILURE;
+            }
+
+            exec("git tag -a -s $escapedVersion -m $escapedMessage", $output, $returnCode);
+            if ($returnCode !== 0) {
+                $io->error('Git tag creation failed');
+
+                return Command::FAILURE;
+            }
+
+            exec("git push origin $escapedVersion", $output, $returnCode);
+            if ($returnCode !== 0) {
+                $io->error('Git push tag failed');
+
+                return Command::FAILURE;
+            }
         }
 
         // runs easycorp/easy-deploy-bundle
-        if ($this->run_deploy and $this->deployCommand === null) {
+        if ($this->run_deploy && $this->deployCommand === null) {
             $deployCommand = $this->getApplication()->find('deploy');
             $emptyInput = new ArrayInput([]);
             $returnCode = $deployCommand->run($emptyInput, $output);
@@ -132,6 +161,7 @@ class VersioningCommand extends Command
 
         // runs other deploy commands
         if ($this->deployCommand) {
+            $this->validateCommand($this->deployCommand);
             $io->writeln('Running deploy command: ' . $this->deployCommand);
             system($this->deployCommand, $res);
             if ($res > 0) {
@@ -148,11 +178,18 @@ class VersioningCommand extends Command
 
                 return Command::FAILURE;
             }
+
+            // Validate playbook and inventory paths
+            if ($this->ansibleInventory) {
+                $this->validateFilePath($this->ansibleInventory);
+            }
+            $this->validateFilePath($this->ansiblePlaybook);
+
             $ansibleCommand = 'ansible-playbook';
             if ($this->ansibleInventory) {
-                $ansibleCommand .= ' -i ' . $this->ansibleInventory;
+                $ansibleCommand .= ' -i ' . escapeshellarg($this->ansibleInventory);
             }
-            $ansibleCommand .= ' ' . $this->ansiblePlaybook;
+            $ansibleCommand .= ' ' . escapeshellarg($this->ansiblePlaybook);
 
             $io->writeln('Running ansible deploy command: ' . $ansibleCommand);
             system($ansibleCommand, $res);
@@ -164,5 +201,31 @@ class VersioningCommand extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * Validates that a command does not contain dangerous characters.
+     *
+     * @throws \InvalidArgumentException if command contains unsafe characters
+     */
+    private function validateCommand(string $command): void
+    {
+        // Check for command chaining and other shell injection patterns
+        if (preg_match('/[;&|`$()<>]/', $command)) {
+            throw new \InvalidArgumentException('Command contains potentially unsafe characters: ' . $command);
+        }
+    }
+
+    /**
+     * Validates that a file path does not contain dangerous characters.
+     *
+     * @throws \InvalidArgumentException if path contains unsafe characters
+     */
+    private function validateFilePath(string $path): void
+    {
+        // Check for path traversal and command injection
+        if (preg_match('/[;&|`$()<>]/', $path)) {
+            throw new \InvalidArgumentException('File path contains potentially unsafe characters: ' . $path);
+        }
     }
 }

@@ -40,9 +40,18 @@ class VersionFile
         return is_readable($filename);
     }
 
+    /**
+     * Read version from file.
+     *
+     * @throws \RuntimeException if file cannot be read
+     */
     public function read(string $filename): string
     {
-        $buffer = file_get_contents($filename);
+        $buffer = @file_get_contents($filename);
+
+        if ($buffer === false) {
+            throw new \RuntimeException("Cannot read version file: $filename");
+        }
 
         return trim($buffer);
     }
@@ -54,15 +63,8 @@ class VersionFile
      */
     public function write(string $filename, string $buffer, bool $append = false): bool
     {
-        $flag = 0;
-        if ($append) {
-            $flag = FILE_APPEND;
-        }
+        $flag = $append ? FILE_APPEND : 0;
 
-        if (@file_put_contents($filename, $buffer, $flag) === false) {
-            return false;
-        }
-
-        return true;
+        return @file_put_contents($filename, $buffer, $flag) !== false;
     }
 }

@@ -15,6 +15,7 @@ namespace Svc\VersioningBundle\Tests\Command;
 
 use PHPUnit\Framework\TestCase;
 use Svc\VersioningBundle\Command\VersioningCommand;
+use Svc\VersioningBundle\Service\CacheClearCheck;
 use Svc\VersioningBundle\Service\SentryReleaseHandling;
 use Svc\VersioningBundle\Service\VersionHandling;
 use Symfony\Component\Console\Application;
@@ -41,9 +42,12 @@ class VersioningCommandTest extends TestCase
         $this->command = new VersioningCommand(
             versionHandling: new VersionHandling(),
             sentryReleaseHandling: new SentryReleaseHandling(),
+            cacheClearCheck: new CacheClearCheck(),
             run_git: false,
             run_deploy: false,
             pre_command: null,
+            checkCacheClear: false,
+            cleanupCacheDir: false,
             createSentryRelease: false,
             sentryAppName: null,
             deployCommand: null,
@@ -207,9 +211,12 @@ class VersioningCommandTest extends TestCase
         $command = new VersioningCommand(
             versionHandling: new VersionHandling(),
             sentryReleaseHandling: new SentryReleaseHandling(),
+            cacheClearCheck: new CacheClearCheck(),
             run_git: false,
             run_deploy: false,
             pre_command: 'echo "Running pre-command"',
+            checkCacheClear: false,
+            cleanupCacheDir: false,
             createSentryRelease: false,
             sentryAppName: null,
             deployCommand: null,
@@ -232,9 +239,12 @@ class VersioningCommandTest extends TestCase
         $command = new VersioningCommand(
             versionHandling: new VersionHandling(),
             sentryReleaseHandling: new SentryReleaseHandling(),
+            cacheClearCheck: new CacheClearCheck(),
             run_git: false,
             run_deploy: false,
             pre_command: 'exit 1',
+            checkCacheClear: false,
+            cleanupCacheDir: false,
             createSentryRelease: false,
             sentryAppName: null,
             deployCommand: null,
@@ -257,9 +267,12 @@ class VersioningCommandTest extends TestCase
         $command = new VersioningCommand(
             versionHandling: new VersionHandling(),
             sentryReleaseHandling: new SentryReleaseHandling(),
+            cacheClearCheck: new CacheClearCheck(),
             run_git: false,
             run_deploy: false,
             pre_command: null,
+            checkCacheClear: false,
+            cleanupCacheDir: false,
             createSentryRelease: false,
             sentryAppName: null,
             deployCommand: null,

@@ -12,8 +12,8 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-$version = '6.0.0';
-$message = 'needs php >= 8.2, introduce immutable Version value object and update version handling logic';
+$version = '6.1.0';
+$message = 'feat: add production cache clear validation with optional cleanup';
 
 echo "Running phpstan:\n";
 system('composer run-script phpstan', $res);

@@ -43,11 +43,12 @@ bin/console svc:versioning:new --major  # 1.1.0 → 2.0.0
 When you run `bin/console svc:versioning:new`, the bundle:
 
 1. **Validates** - Runs optional pre-commands (tests, linting)
-2. **Increments** - Updates version number using semantic versioning
-3. **Updates Files** - Modifies `.version`, `CHANGELOG.md`, and Twig templates
-4. **Git Operations** - Commits changes, pushes, and creates tags
-5. **Deploys** - Triggers deployment via your chosen method
-6. **Tracks** - Optional Sentry release creation
+2. **Cache Check** - Optionally verifies production cache can be cleared without errors
+3. **Increments** - Updates version number using semantic versioning
+4. **Updates Files** - Modifies `.version`, `CHANGELOG.md`, and Twig templates
+5. **Git Operations** - Commits changes, pushes, and creates tags
+6. **Deploys** - Triggers deployment via your chosen method
+7. **Tracks** - Optional Sentry release creation
 
 ## 📖 Documentation
 
@@ -93,6 +94,8 @@ svc_versioning:
     run_git: true                    # Enable git operations
     run_deploy: true                 # Enable deployment
     pre_command: "vendor/bin/phpunit" # Run tests before versioning
+    check_cache_clear: false         # Check if production cache clear works
+    cleanup_cache_dir: false         # Delete var/cache/prod after check
     create_sentry_release: false     # Sentry integration
 ```
 

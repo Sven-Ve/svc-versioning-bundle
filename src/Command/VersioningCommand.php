@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Svc\VersioningBundle\Command;
 
+use Svc\VersioningBundle\Service\CacheClearCheck;
 use Svc\VersioningBundle\Service\SentryReleaseHandling;
 use Svc\VersioningBundle\Service\VersionHandling as ServiceVersionHandling;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -45,9 +46,12 @@ class VersioningCommand extends Command
     public function __construct(
         private readonly ServiceVersionHandling $versionHandling,
         private readonly SentryReleaseHandling $sentryReleaseHandling,
+        private readonly CacheClearCheck $cacheClearCheck,
         private readonly bool $run_git,
         private readonly bool $run_deploy,
         private readonly ?string $pre_command,
+        private readonly bool $checkCacheClear,
+        private readonly bool $cleanupCacheDir,
         private readonly bool $createSentryRelease,
         private readonly ?string $sentryAppName,
         private readonly ?string $deployCommand,
@@ -70,6 +74,24 @@ class VersioningCommand extends Command
                 $output->writeln('<error> Error during execution pre command. Versioning canceled. </error>');
 
                 return Command::FAILURE;
+            }
+        }
+
+        // Check production cache clear
+        if ($this->checkCacheClear) {
+            $io->writeln('Checking production cache clear...');
+            $cacheResult = $this->cacheClearCheck->checkProductionCacheClear($this->cleanupCacheDir);
+
+            if (!$cacheResult['success']) {
+                $output->writeln('<error> Error during production cache clear. Versioning canceled. </error>');
+                $output->writeln('<error> ' . $cacheResult['error_output'] . ' </error>');
+
+                return Command::FAILURE;
+            }
+
+            $io->writeln('<info>Production cache cleared successfully.</info>');
+            if ($this->cleanupCacheDir) {
+                $io->writeln('<info>Cache directory var/cache/prod has been cleaned up.</info>');
             }
         }
 

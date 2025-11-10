@@ -15,6 +15,7 @@ namespace Svc\VersioningBundle\Tests\Command;
 
 use PHPUnit\Framework\TestCase;
 use Svc\VersioningBundle\Command\VersioningCommand;
+use Svc\VersioningBundle\Service\CacheClearCheck;
 use Svc\VersioningBundle\Service\SentryReleaseHandling;
 use Svc\VersioningBundle\Service\VersionHandling;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -78,9 +79,12 @@ class VersioningCommandSecurityTest extends TestCase
             $command = new VersioningCommand(
                 versionHandling: new VersionHandling(),
                 sentryReleaseHandling: new SentryReleaseHandling(),
+                cacheClearCheck: new CacheClearCheck(),
                 run_git: false,
                 run_deploy: false,
                 pre_command: $dangerousCommand,
+                checkCacheClear: false,
+                cleanupCacheDir: false,
                 createSentryRelease: false,
                 sentryAppName: null,
                 deployCommand: null,
@@ -103,9 +107,12 @@ class VersioningCommandSecurityTest extends TestCase
         $command = new VersioningCommand(
             versionHandling: new VersionHandling(),
             sentryReleaseHandling: new SentryReleaseHandling(),
+            cacheClearCheck: new CacheClearCheck(),
             run_git: false,
             run_deploy: false,
             pre_command: null,
+            checkCacheClear: false,
+            cleanupCacheDir: false,
             createSentryRelease: false,
             sentryAppName: null,
             deployCommand: 'deploy.sh; rm -rf /',
@@ -127,9 +134,12 @@ class VersioningCommandSecurityTest extends TestCase
         $command = new VersioningCommand(
             versionHandling: new VersionHandling(),
             sentryReleaseHandling: new SentryReleaseHandling(),
+            cacheClearCheck: new CacheClearCheck(),
             run_git: false,
             run_deploy: false,
             pre_command: null,
+            checkCacheClear: false,
+            cleanupCacheDir: false,
             createSentryRelease: false,
             sentryAppName: null,
             deployCommand: null,
@@ -151,9 +161,12 @@ class VersioningCommandSecurityTest extends TestCase
         $command = new VersioningCommand(
             versionHandling: new VersionHandling(),
             sentryReleaseHandling: new SentryReleaseHandling(),
+            cacheClearCheck: new CacheClearCheck(),
             run_git: false,
             run_deploy: false,
             pre_command: null,
+            checkCacheClear: false,
+            cleanupCacheDir: false,
             createSentryRelease: false,
             sentryAppName: null,
             deployCommand: null,
@@ -183,9 +196,12 @@ class VersioningCommandSecurityTest extends TestCase
             $command = new VersioningCommand(
                 versionHandling: new VersionHandling(),
                 sentryReleaseHandling: new SentryReleaseHandling(),
+                cacheClearCheck: new CacheClearCheck(),
                 run_git: false,
                 run_deploy: false,
                 pre_command: $safeCommand,
+                checkCacheClear: false,
+                cleanupCacheDir: false,
                 createSentryRelease: false,
                 sentryAppName: null,
                 deployCommand: null,

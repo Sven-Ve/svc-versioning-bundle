@@ -9,19 +9,23 @@ The SvcVersioningBundle can be configured through the `config/packages/svc_versi
 svc_versioning:
     # Git Operations
     run_git: true                    # Enable git operations (commit, push, tag)
-    
+
     # Pre-execution Commands
     pre_command: ~                   # Command to run before versioning (e.g., tests, linting)
-    
+
+    # Cache Validation
+    check_cache_clear: false         # Check if production cache clear runs without errors
+    cleanup_cache_dir: false         # Delete var/cache/prod directory after successful check
+
     # Deployment Options
     run_deploy: true                 # Enable deployment after versioning
     deploy_command: ~                # Custom deployment command (overrides EasyDeploy)
-    
+
     # Ansible Deployment
     ansible_deploy: false            # Use Ansible for deployment
     ansible_inventory: inventory.yaml # Ansible inventory file name
     ansible_playbook: ~              # Ansible playbook to execute
-    
+
     # Sentry Integration
     create_sentry_release: false     # Create Sentry release
     sentry_app_name: ~               # Sentry application name
@@ -62,6 +66,38 @@ svc_versioning:
     # or
     pre_command: "vendor/bin/phpunit && composer run-script phpstan"
 ```
+
+### Cache Validation
+
+#### Check Cache Clear (`check_cache_clear`)
+
+**Default:** `false`
+
+Checks if the production cache can be cleared without errors after the pre_command has run. This ensures that your application's production cache is working correctly before proceeding with the release.
+
+```yaml
+svc_versioning:
+    check_cache_clear: true
+```
+
+**How it works:**
+- Executes `bin/console cache:clear --env=prod --no-debug`
+- If the command fails, the entire versioning process is aborted
+- Useful for catching cache warmup issues before deployment
+
+#### Cleanup Cache Directory (`cleanup_cache_dir`)
+
+**Default:** `false`
+
+When enabled (and `check_cache_clear` is also enabled), deletes the `var/cache/prod` directory after a successful cache clear check. This ensures the cache directory doesn't consume unnecessary disk space in your repository.
+
+```yaml
+svc_versioning:
+    check_cache_clear: true
+    cleanup_cache_dir: true
+```
+
+**Note:** This option only takes effect when `check_cache_clear` is `true` and the cache clear was successful.
 
 ### Deployment Settings
 
@@ -143,6 +179,8 @@ svc_versioning:
     run_git: true
     run_deploy: true
     pre_command: "composer run-script phpstan && vendor/bin/phpunit"
+    check_cache_clear: true
+    cleanup_cache_dir: true
     create_sentry_release: true
     sentry_app_name: "my-app"
     ansible_deploy: true

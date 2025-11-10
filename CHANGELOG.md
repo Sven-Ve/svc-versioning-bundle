@@ -94,3 +94,8 @@
 ## Version 6.0.0
 *Fri, 31 Oct 2025 21:04:51 +0000*
 - needs php >= 8.2, introduce immutable Version value object and update version handling logic
+
+
+## Version 6.1.0
+*Mon, 10 Nov 2025 20:34:27 +0000*
+- feat: add production cache clear validation with optional cleanup

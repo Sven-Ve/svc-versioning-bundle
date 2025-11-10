@@ -9,5 +9,7 @@ services:
 
   Svc\VersioningBundle\Service\SentryReleaseHandling:
 
+  Svc\VersioningBundle\Service\CacheClearCheck:
+
   # Command (arguments are injected via loadExtension in SvcVersioningBundle)
   Svc\VersioningBundle\Command\VersioningCommand:

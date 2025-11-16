@@ -154,41 +154,7 @@ Deployment command failed
   ansible all -i inventory.yaml -m ping
   ```
 
-### 6. Sentry Integration Issues
-
-**Error:**
-```
-Sentry configuration not found
-```
-
-**Solutions:**
-
-#### Install Sentry Bundle
-```bash
-composer require sentry/sentry-symfony
-```
-
-#### Configure Sentry
-Create `config/packages/sentry.yaml`:
-```yaml
-sentry:
-    dsn: '%env(SENTRY_DSN)%'
-```
-
-Add environment variable:
-```bash
-# .env
-SENTRY_DSN=your-sentry-dsn-here
-```
-
-#### Disable Sentry Integration
-```yaml
-# config/packages/svc_versioning.yaml
-svc_versioning:
-    create_sentry_release: false
-```
-
-### 7. Version File Issues
+### 6. Version File Issues
 
 **Error:**
 ```

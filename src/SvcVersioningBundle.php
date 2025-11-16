@@ -38,8 +38,6 @@ class SvcVersioningBundle extends AbstractBundle
             ->stringNode('pre_command')->info('run this command before start versioning, stop on error')->example('composer run-script phpstan')->end()
             ->booleanNode('check_cache_clear')->defaultFalse()->info('Check if production cache clear runs without errors after pre_command')->end()
             ->booleanNode('cleanup_cache_dir')->defaultFalse()->info('Delete var/cache/prod directory after cache clear check')->end()
-            ->booleanNode('create_sentry_release')->defaultFalse()->info('Create a new release in config/packages/sentry.yaml')->end()
-            ->stringNode('sentry_app_name')->info('Sentry application name (included in release)')->end()
           ->end();
     }
 
@@ -57,8 +55,6 @@ class SvcVersioningBundle extends AbstractBundle
           ->arg('$pre_command', $config['pre_command'] ?? null)
           ->arg('$checkCacheClear', $config['check_cache_clear'])
           ->arg('$cleanupCacheDir', $config['cleanup_cache_dir'])
-          ->arg('$createSentryRelease', $config['create_sentry_release'])
-          ->arg('$sentryAppName', $config['sentry_app_name'] ?? null)
           ->arg('$deployCommand', $config['deploy_command'] ?? null)
           ->arg('$ansibleDeploy', $config['ansible_deploy'])
           ->arg('$ansibleInventory', $config['ansible_inventory'] ?? null)

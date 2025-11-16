@@ -70,8 +70,6 @@ svc_versioning:
     run_git: true
     run_deploy: true
     pre_command: "composer run-script phpstan && vendor/bin/phpunit"
-    create_sentry_release: true
-    sentry_app_name: "my-application"
 ```
 
 **Workflow:**
@@ -86,7 +84,6 @@ bin/console svc:versioning:new --minor "Release new features"
 # - Commit and push changes
 # - Create and push git tag
 # - Deploy via EasyDeploy
-# - Create Sentry release
 ```
 
 ### 3. Multi-Environment Deployment
@@ -110,8 +107,6 @@ svc_versioning:
     run_git: false  # Git operations already done in staging
     run_deploy: true
     deploy_command: "./deploy.sh production"
-    create_sentry_release: true
-    sentry_app_name: "my-app"
 ```
 
 **Workflow:**
@@ -321,7 +316,7 @@ curl -X POST http://service-b/api/version-update \
 ### Deployment Safety
 - Always run tests in pre_command
 - Use staging environment for testing
-- Monitor deployments with Sentry integration
+- Monitor deployments
 - Have rollback procedures ready
 
 ### Team Coordination

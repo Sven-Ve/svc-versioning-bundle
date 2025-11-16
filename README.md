@@ -7,6 +7,10 @@
 
 A Symfony bundle that provides **automated semantic versioning**, **git operations**, and **deployment capabilities** for your applications. Streamline your release process with a single command.
 
+> **⚠️ Breaking Changes in v7.0.0**
+>
+> Sentry integration has been removed. If you're upgrading from v6.x, see [BREAKING_CHANGES.md](BREAKING_CHANGES.md) for migration instructions.
+
 ## 🚀 Quick Start
 
 ```bash
@@ -33,7 +37,6 @@ bin/console svc:versioning:new --major  # 1.1.0 → 2.0.0
   - Ansible automation
   - Docker deployments
 - **🧪 Pre-deployment Validation**: Run tests, linting, or custom commands before release
-- **📊 Sentry Integration**: Automatic release tracking
 - **🔄 CI/CD Ready**: Perfect for automated pipelines
 - **💎 Modern PHP**: Built with PHP 8.2+ features (readonly properties, match expressions)
 - **🛡️ Type Safe**: Immutable value objects with PHPStan level 6 compliance
@@ -48,7 +51,6 @@ When you run `bin/console svc:versioning:new`, the bundle:
 4. **Updates Files** - Modifies `.version`, `CHANGELOG.md`, and Twig templates
 5. **Git Operations** - Commits changes, pushes, and creates tags
 6. **Deploys** - Triggers deployment via your chosen method
-7. **Tracks** - Optional Sentry release creation
 
 ## 📖 Documentation
 
@@ -64,6 +66,7 @@ When you run `bin/console svc:versioning:new`, the bundle:
 
 ### Development
 - **[Contributing](CONTRIBUTING.md)** - Development guidelines and setup
+- **[Breaking Changes](BREAKING_CHANGES.md)** - Version migration guides
 
 ## 🏗️ Requirements
 
@@ -96,7 +99,6 @@ svc_versioning:
     pre_command: "vendor/bin/phpunit" # Run tests before versioning
     check_cache_clear: false         # Check if production cache clear works
     cleanup_cache_dir: false         # Delete var/cache/prod after check
-    create_sentry_release: false     # Sentry integration
 ```
 
 ## 🚦 Usage Examples

@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Svc\VersioningBundle\Command;
 
 use Svc\VersioningBundle\Service\CacheClearCheck;
-use Svc\VersioningBundle\Service\SentryReleaseHandling;
 use Svc\VersioningBundle\Service\VersionHandling as ServiceVersionHandling;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -45,15 +44,12 @@ class VersioningCommand extends Command
 
     public function __construct(
         private readonly ServiceVersionHandling $versionHandling,
-        private readonly SentryReleaseHandling $sentryReleaseHandling,
         private readonly CacheClearCheck $cacheClearCheck,
         private readonly bool $run_git,
         private readonly bool $run_deploy,
         private readonly ?string $pre_command,
         private readonly bool $checkCacheClear,
         private readonly bool $cleanupCacheDir,
-        private readonly bool $createSentryRelease,
-        private readonly ?string $sentryAppName,
         private readonly ?string $deployCommand,
         private readonly bool $ansibleDeploy,
         private readonly ?string $ansibleInventory,
@@ -125,13 +121,6 @@ class VersioningCommand extends Command
 
         if (!$this->versionHandling->appendCHANGELOG('CHANGELOG.md', $newVersion, $commitMessage)) {
             $output->writeln('<error> Cannot write CHANGELOG.md </error>');
-        }
-
-        // create Sentry release
-        if ($this->createSentryRelease) {
-            if (!$this->sentryReleaseHandling->WriteNewSentryRelease($newVersion, $this->sentryAppName, $io)) {
-                return Command::FAILURE;
-            }
         }
 
         if ($this->run_git) {

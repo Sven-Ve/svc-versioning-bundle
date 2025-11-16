@@ -16,7 +16,6 @@ namespace Svc\VersioningBundle\Tests\Command;
 use PHPUnit\Framework\TestCase;
 use Svc\VersioningBundle\Command\VersioningCommand;
 use Svc\VersioningBundle\Service\CacheClearCheck;
-use Svc\VersioningBundle\Service\SentryReleaseHandling;
 use Svc\VersioningBundle\Service\VersionHandling;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -78,15 +77,12 @@ class VersioningCommandSecurityTest extends TestCase
         foreach ($dangerousCommands as $dangerousCommand) {
             $command = new VersioningCommand(
                 versionHandling: new VersionHandling(),
-                sentryReleaseHandling: new SentryReleaseHandling(),
                 cacheClearCheck: new CacheClearCheck(),
                 run_git: false,
                 run_deploy: false,
                 pre_command: $dangerousCommand,
                 checkCacheClear: false,
                 cleanupCacheDir: false,
-                createSentryRelease: false,
-                sentryAppName: null,
                 deployCommand: null,
                 ansibleDeploy: false,
                 ansibleInventory: null,
@@ -106,15 +102,12 @@ class VersioningCommandSecurityTest extends TestCase
     {
         $command = new VersioningCommand(
             versionHandling: new VersionHandling(),
-            sentryReleaseHandling: new SentryReleaseHandling(),
             cacheClearCheck: new CacheClearCheck(),
             run_git: false,
             run_deploy: false,
             pre_command: null,
             checkCacheClear: false,
             cleanupCacheDir: false,
-            createSentryRelease: false,
-            sentryAppName: null,
             deployCommand: 'deploy.sh; rm -rf /',
             ansibleDeploy: false,
             ansibleInventory: null,
@@ -133,15 +126,12 @@ class VersioningCommandSecurityTest extends TestCase
     {
         $command = new VersioningCommand(
             versionHandling: new VersionHandling(),
-            sentryReleaseHandling: new SentryReleaseHandling(),
             cacheClearCheck: new CacheClearCheck(),
             run_git: false,
             run_deploy: false,
             pre_command: null,
             checkCacheClear: false,
             cleanupCacheDir: false,
-            createSentryRelease: false,
-            sentryAppName: null,
             deployCommand: null,
             ansibleDeploy: true,
             ansibleInventory: 'inventory.yaml; rm -rf /',
@@ -160,15 +150,12 @@ class VersioningCommandSecurityTest extends TestCase
     {
         $command = new VersioningCommand(
             versionHandling: new VersionHandling(),
-            sentryReleaseHandling: new SentryReleaseHandling(),
             cacheClearCheck: new CacheClearCheck(),
             run_git: false,
             run_deploy: false,
             pre_command: null,
             checkCacheClear: false,
             cleanupCacheDir: false,
-            createSentryRelease: false,
-            sentryAppName: null,
             deployCommand: null,
             ansibleDeploy: true,
             ansibleInventory: null,
@@ -195,15 +182,12 @@ class VersioningCommandSecurityTest extends TestCase
         foreach ($safeCommands as $safeCommand) {
             $command = new VersioningCommand(
                 versionHandling: new VersionHandling(),
-                sentryReleaseHandling: new SentryReleaseHandling(),
                 cacheClearCheck: new CacheClearCheck(),
                 run_git: false,
                 run_deploy: false,
                 pre_command: $safeCommand,
                 checkCacheClear: false,
                 cleanupCacheDir: false,
-                createSentryRelease: false,
-                sentryAppName: null,
                 deployCommand: null,
                 ansibleDeploy: false,
                 ansibleInventory: null,

@@ -27,6 +27,7 @@ SvcVersioningBundle is a Symfony bundle that provides automated semantic version
 ### Bundle Structure
 - **SvcVersioningBundle** (`src/SvcVersioningBundle.php`): Main bundle class with configuration definition
 - **VersioningCommand** (`src/Command/VersioningCommand.php`): Console command for version management
+- **Service Configuration** (`config/services.php`): PHP-based service container configuration (migrated from YAML in v6.1.0)
 - **Value Objects**:
   - `Version`: Immutable value object representing semantic versions (major.minor.patch)
     - Readonly properties with PHP 8.2+ features
@@ -38,7 +39,6 @@ SvcVersioningBundle is a Symfony bundle that provides automated semantic version
   - `VersionHandling`: Core version logic and file operations
   - `VersionString`: Version string parsing/formatting (delegates to Version value object)
   - `VersionFile`: File I/O operations for version files
-  - `SentryReleaseHandling`: Optional Sentry integration
 
 ### Workflow Process
 1. Run optional pre-command (tests, linting, etc.)
@@ -46,16 +46,14 @@ SvcVersioningBundle is a Symfony bundle that provides automated semantic version
 3. Write version to `.version` file
 4. Generate Twig template (`templates/_version.html.twig`)
 5. Append version entry to `CHANGELOG.md`
-6. Optional: Create Sentry release
-7. Optional: Git operations (add, commit, push, tag)
-8. Optional: Deploy via EasyDeploy bundle, custom command, or Ansible
+6. Optional: Git operations (add, commit, push, tag)
+7. Optional: Deploy via EasyDeploy bundle, custom command, or Ansible
 
 ### Configuration
 Bundle configuration is defined in `config/packages/svc_versioning.yaml` with options for:
 - Git operations (`run_git`)
 - Deployment settings (`run_deploy`, `deploy_command`, `ansible_deploy`)
 - Pre-execution commands (`pre_command`)
-- Sentry integration (`create_sentry_release`, `sentry_app_name`)
 
 ### Key Files Generated
 - `.version` - Current version number
@@ -75,6 +73,7 @@ Bundle configuration is defined in `config/packages/svc_versioning.yaml` with op
 - **Constructor property promotion** (PHP 8.0): Concise value object definitions
 - **Named arguments** (PHP 8.0): Improved readability
 - **Typed properties** (PHP 7.4+): Strict type safety
+- **PHP-based service configuration** (Symfony 6.3+): Type-safe service definitions with IDE support
 
 ## Code Quality & Architecture Patterns
 

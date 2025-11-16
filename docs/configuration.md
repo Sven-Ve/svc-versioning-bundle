@@ -25,10 +25,6 @@ svc_versioning:
     ansible_deploy: false            # Use Ansible for deployment
     ansible_inventory: inventory.yaml # Ansible inventory file name
     ansible_playbook: ~              # Ansible playbook to execute
-
-    # Sentry Integration
-    create_sentry_release: false     # Create Sentry release
-    sentry_app_name: ~               # Sentry application name
 ```
 
 ## Configuration Options Explained
@@ -143,24 +139,6 @@ svc_versioning:
 - Inventory and playbook files must exist in your project root
 - Proper SSH keys and permissions configured
 
-### Sentry Integration
-
-#### Create Sentry Release (`create_sentry_release`)
-
-**Default:** `false`
-
-Automatically create a new release in Sentry when versioning.
-
-```yaml
-svc_versioning:
-    create_sentry_release: true
-    sentry_app_name: "my-application"
-```
-
-**Requirements:**
-- Sentry must be configured in your application
-- Sentry configuration file must exist at `config/packages/sentry.yaml`
-
 ## Configuration Examples
 
 ### Development Environment
@@ -181,8 +159,6 @@ svc_versioning:
     pre_command: "composer run-script phpstan && vendor/bin/phpunit"
     check_cache_clear: true
     cleanup_cache_dir: true
-    create_sentry_release: true
-    sentry_app_name: "my-app"
     ansible_deploy: true
     ansible_inventory: "production.yml"
     ansible_playbook: "deploy.yml"
@@ -211,4 +187,3 @@ The bundle validates your configuration at runtime. Common validation errors:
 
 - **Missing Ansible files**: If `ansible_deploy: true` but inventory/playbook files don't exist
 - **Invalid pre_command**: If the specified pre-command is not executable
-- **Missing Sentry config**: If `create_sentry_release: true` but Sentry is not configured

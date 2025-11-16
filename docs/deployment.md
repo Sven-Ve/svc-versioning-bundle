@@ -360,7 +360,6 @@ svc_versioning:
 - Log deployment activities
 - Set up alerts for deployment failures
 - Monitor application metrics after deployment
-- Use Sentry integration for error tracking
 
 ## Rollback Strategies
 

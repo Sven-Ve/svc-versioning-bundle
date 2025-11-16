@@ -15,7 +15,6 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Svc\VersioningBundle\Command\VersioningCommand;
 use Svc\VersioningBundle\Service\CacheClearCheck;
-use Svc\VersioningBundle\Service\SentryReleaseHandling;
 use Svc\VersioningBundle\Service\VersionHandling;
 
 return static function (ContainerConfigurator $container): void {
@@ -27,8 +26,6 @@ return static function (ContainerConfigurator $container): void {
 
     // Services
     $services->set(VersionHandling::class);
-    $services->set(SentryReleaseHandling::class);
-
     $services->set(CacheClearCheck::class);
 
     // Command (arguments are injected via loadExtension in SvcVersioningBundle)

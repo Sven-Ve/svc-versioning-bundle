@@ -12,8 +12,8 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-$version = '6.1.0';
-$message = 'feat: add production cache clear validation with optional cleanup';
+$version = '7.0.0';
+$message = 'BREAKING: remove Sentry integration, migrate from YAML to PHP service configuration';
 
 echo "Running phpstan:\n";
 system('composer run-script phpstan', $res);

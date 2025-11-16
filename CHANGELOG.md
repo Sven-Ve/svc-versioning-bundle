@@ -99,3 +99,8 @@
 ## Version 6.1.0
 *Mon, 10 Nov 2025 20:34:27 +0000*
 - feat: add production cache clear validation with optional cleanup
+
+
+## Version 7.0.0
+*Sun, 16 Nov 2025 19:45:04 +0000*
+- BREAKING: remove Sentry integration, migrate from YAML to PHP service configuration

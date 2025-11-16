@@ -45,8 +45,7 @@ src/
 ├── Service/              # Core business logic
 │   ├── VersionHandling.php
 │   ├── VersionString.php
-│   ├── VersionFile.php
-│   └── SentryReleaseHandling.php
+│   └── VersionFile.php
 ├── SvcVersioningBundle.php  # Main bundle class
 └── config/
     └── services.yaml     # Service definitions
@@ -85,7 +84,7 @@ vendor/bin/phpunit --coverage-html coverage/
 - **Unit Tests**: Test individual classes in isolation
 - **Integration Tests**: Test command execution and service interaction
 - **File System Tests**: Use temporary directories for file operations
-- **Mock External Dependencies**: Git operations, Sentry API calls
+- **Mock External Dependencies**: Git operations
 
 #### Test Example
 

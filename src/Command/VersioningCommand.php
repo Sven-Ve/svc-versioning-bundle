@@ -112,7 +112,7 @@ class VersioningCommand extends Command
             $input->getOption('patch'),
             $input->getOption('init')
         );
-        $io->writeln("New version: $newVersion");
+        $io->writeln("<info>New version: $newVersion</info>");
 
         $commitMessage = $input->getArgument('commitMessage');
         if (!$commitMessage) {

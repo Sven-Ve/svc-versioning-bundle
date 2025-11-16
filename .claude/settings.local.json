@@ -3,7 +3,9 @@
     "allow": [
       "Bash(composer run-script:*)",
       "Bash(php vendor/bin/phpunit:*)",
-      "Bash(/opt/homebrew/bin/php-cs-fixer fix:*)"
+      "Bash(/opt/homebrew/bin/php-cs-fixer fix:*)",
+      "Bash(composer validate:*)",
+      "Bash(bin/console svc:versioning:new:*)"
     ],
     "deny": []
   }

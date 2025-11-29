@@ -63,7 +63,6 @@ class CacheClearCheckTest extends TestCase
         // Use reflection to access private method
         $reflection = new \ReflectionClass($this->cacheClearCheck);
         $method = $reflection->getMethod('removeCacheDirectory');
-        $method->setAccessible(true);
 
         // Remove directory
         $method->invoke($this->cacheClearCheck, $this->testCacheDir);
@@ -88,7 +87,6 @@ class CacheClearCheckTest extends TestCase
         // Use reflection to access private method
         $reflection = new \ReflectionClass($this->cacheClearCheck);
         $method = $reflection->getMethod('removeCacheDirectory');
-        $method->setAccessible(true);
 
         // Remove directory
         $method->invoke($this->cacheClearCheck, $this->testCacheDir);
@@ -104,7 +102,6 @@ class CacheClearCheckTest extends TestCase
         // Use reflection to access private method
         $reflection = new \ReflectionClass($this->cacheClearCheck);
         $method = $reflection->getMethod('removeCacheDirectory');
-        $method->setAccessible(true);
 
         // Should not throw exception
         $method->invoke($this->cacheClearCheck, $nonExistentDir);

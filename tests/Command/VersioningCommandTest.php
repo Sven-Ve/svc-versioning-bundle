@@ -17,7 +17,6 @@ use PHPUnit\Framework\TestCase;
 use Svc\VersioningBundle\Command\VersioningCommand;
 use Svc\VersioningBundle\Service\CacheClearCheck;
 use Svc\VersioningBundle\Service\VersionHandling;
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class VersioningCommandTest extends TestCase
@@ -51,9 +50,6 @@ class VersioningCommandTest extends TestCase
             ansibleInventory: null,
             ansiblePlaybook: null
         );
-
-        $application = new Application();
-        $application->add($this->command);
 
         $this->commandTester = new CommandTester($this->command);
     }

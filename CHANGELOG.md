@@ -104,3 +104,8 @@
 ## Version 7.0.0
 *Sun, 16 Nov 2025 19:45:04 +0000*
 - BREAKING: remove Sentry integration, migrate from YAML to PHP service configuration
+
+
+## Version 7.1.0
+*Sat, 29 Nov 2025 16:16:06 +0000*
+- tested with symfony 7.4 and symfony 8.

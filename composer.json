@@ -11,11 +11,11 @@
   ],
   "require": {
     "php": "^8.2",
-    "symfony/console": "^6 || ^7",
-    "symfony/http-kernel": "^6 || ^7",
-    "symfony/dependency-injection": "^6 || ^7",
-    "symfony/config": "^6 || ^7",
-    "symfony/yaml": "^6 || ^7"
+    "symfony/console": "^6.3 | ^7.2 | ^8",
+    "symfony/http-kernel": "^6.3 | ^7.2 | ^8",
+    "symfony/dependency-injection": "^6.3 | ^7.2 | ^8",
+    "symfony/config": "^6.3 | ^7.2 | ^8",
+    "symfony/yaml": "^6.3 | ^7.2 | ^8"
   },
   "suggest": {
     "easycorp/easy-deploy-bundle": "Prefered tool to deploy the application"

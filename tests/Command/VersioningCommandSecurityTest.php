@@ -94,7 +94,7 @@ class VersioningCommandSecurityTest extends TestCase
             $this->expectException(\InvalidArgumentException::class);
             $this->expectExceptionMessage('Command contains potentially unsafe characters');
 
-            $commandTester->execute(['--init' => true]);
+            $commandTester->execute(['--init' => true, 'commitMessage' => 'Test version']);
         }
     }
 
@@ -119,7 +119,7 @@ class VersioningCommandSecurityTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Command contains potentially unsafe characters');
 
-        $commandTester->execute(['--init' => true]);
+        $commandTester->execute(['--init' => true, 'commitMessage' => 'Test version']);
     }
 
     public function testAnsibleInventoryWithDangerousCharactersThrowsException(): void
@@ -143,7 +143,7 @@ class VersioningCommandSecurityTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('File path contains potentially unsafe characters');
 
-        $commandTester->execute(['--init' => true]);
+        $commandTester->execute(['--init' => true, 'commitMessage' => 'Test version']);
     }
 
     public function testAnsiblePlaybookWithDangerousCharactersThrowsException(): void
@@ -167,7 +167,7 @@ class VersioningCommandSecurityTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('File path contains potentially unsafe characters');
 
-        $commandTester->execute(['--init' => true]);
+        $commandTester->execute(['--init' => true, 'commitMessage' => 'Test version']);
     }
 
     public function testSafeCommandsAreAccepted(): void
@@ -199,7 +199,7 @@ class VersioningCommandSecurityTest extends TestCase
             // Should not throw validation exception
             // Note: The command itself may fail, but validation should pass
             try {
-                $commandTester->execute(['--init' => true]);
+                $commandTester->execute(['--init' => true, 'commitMessage' => 'Test version']);
                 // Validation passed - command executed (even if it failed)
                 $this->addToAssertionCount(1);
             } catch (\InvalidArgumentException $e) {

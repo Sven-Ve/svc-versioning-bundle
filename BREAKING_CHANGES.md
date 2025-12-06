@@ -2,6 +2,99 @@
 
 This document tracks all breaking changes in the SvcVersioningBundle.
 
+## Version 8.0.0
+
+### Changed: Minimum Symfony Version & Invokable Command Pattern
+
+**Date:** 2025-12-06
+
+The bundle now requires **Symfony 7.4+ or 8.x** and uses the modern invokable command pattern.
+
+#### What changed:
+
+- Minimum Symfony version: `6.x/7.x` → `7.4+`
+- `VersioningCommand` now uses `__invoke()` instead of `execute()`
+- Command parameters defined with `#[Argument]` and `#[Option]` attributes
+- `commitMessage` can be provided as argument or will be prompted interactively via `#[Ask]`
+- Uses `SymfonyStyle` for output handling
+
+#### Migration Guide:
+
+**For Bundle Users:**
+
+1. **Upgrade Symfony to 7.4+ or 8.x:**
+
+   ```bash
+   # Check current Symfony version
+   composer show symfony/console
+
+   # Upgrade to Symfony 7.4 or 8.x
+   composer require "symfony/console:^7.4" # or ^8.0
+   ```
+
+2. **Command usage now supports interactive prompts:**
+
+   ```bash
+   # Provide commit message as argument (works as before)
+   bin/console svc:versioning:new "commit message" --patch
+
+   # NEW: Interactive prompt if no message provided
+   bin/console svc:versioning:new --patch
+   # → "Please enter the commit message:" [waits for input]
+   ```
+
+3. **If you need Symfony 6.x or 7.0-7.3 support:**
+
+   Use v7.x of this bundle:
+   ```bash
+   composer require "svc/versioning-bundle:^7.0"
+   ```
+
+**For Bundle Developers/Contributors:**
+
+The command now uses the invokable pattern:
+
+```php
+// Before (v7.x):
+protected function execute(InputInterface $input, OutputInterface $output): int
+{
+    $io = new SymfonyStyle($input, $output);
+    $commitMessage = $input->getArgument('commitMessage');
+    // ...
+}
+
+// After (v8.x):
+public function __invoke(
+    SymfonyStyle $io,
+    #[Argument(name: 'commitMessage', description: 'Commit message')]
+    #[Ask('Please enter the commit message:')]
+    string $commitMessage,
+    #[Option(shortcut: 'p', description: 'Add patch version')] bool $patch = false,
+): int {
+    // Direct parameter access, no need for $input->getArgument()
+    // Interactive prompt via #[Ask] if commitMessage not provided
+    // ...
+}
+```
+
+#### Why was it changed?
+
+- Leverages Symfony 7.4's modern command features
+- Cleaner, more maintainable code
+- Better IDE support and type safety
+- Automatic parameter extraction from method signature
+- Aligns with modern Symfony best practices
+
+#### Benefits:
+
+- 🎯 Type-safe parameters with full IDE autocomplete
+- 🧹 Cleaner code without manual argument extraction
+- 📝 Self-documenting command signatures
+- ✨ Modern attribute-based configuration
+- 💬 Interactive prompts improve user experience when running commands manually
+
+---
+
 ## Version 7.0.0
 
 ### Removed: Sentry Integration

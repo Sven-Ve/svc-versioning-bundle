@@ -109,3 +109,8 @@
 ## Version 7.1.0
 *Sat, 29 Nov 2025 16:16:06 +0000*
 - tested with symfony 7.4 and symfony 8.
+
+
+## Version 8.0.0
+*Sat, 06 Dec 2025 20:55:03 +0000*
+- BREAKING: migrate to Symfony 7.4+ invokable command pattern - requires Symfony 7.4 or higher

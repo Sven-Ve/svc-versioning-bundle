@@ -12,8 +12,8 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-$version = '7.1.0';
-$message = 'tested with symfony 7.4 and symfony 8.';
+$version = '8.0.0';
+$message = 'BREAKING: migrate to Symfony 7.4+ invokable command pattern - requires Symfony 7.4 or higher';
 
 echo "Running phpstan:\n";
 system('composer run-script phpstan', $res);

@@ -14,14 +14,13 @@ declare(strict_types=1);
 namespace Svc\VersioningBundle\Command;
 
 use Svc\VersioningBundle\Service\CacheClearCheck;
-use Svc\VersioningBundle\Service\VersionHandling as ServiceVersionHandling;
+use Svc\VersioningBundle\Service\VersionHandling;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Attribute\Option;
+use Symfony\Component\Console\Attribute\Argument;
+use Symfony\Component\Console\Attribute\Ask;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
@@ -32,18 +31,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class VersioningCommand extends Command
 {
-    protected function configure(): void
-    {
-        $this
-          ->addOption('major', null, InputOption::VALUE_NONE, 'Add major version')
-          ->addOption('minor', 'm', InputOption::VALUE_NONE, 'Add minor version')
-          ->addOption('patch', 'p', InputOption::VALUE_NONE, 'Add patch version')
-          ->addOption('init', 'i', InputOption::VALUE_NONE, 'Init versioning (set to 0.0.1)')
-          ->addArgument('commitMessage', InputArgument::OPTIONAL, 'Commit message');
-    }
-
     public function __construct(
-        private readonly ServiceVersionHandling $versionHandling,
+        private readonly VersionHandling $versionHandling,
         private readonly CacheClearCheck $cacheClearCheck,
         private readonly bool $run_git,
         private readonly bool $run_deploy,
@@ -58,16 +47,23 @@ class VersioningCommand extends Command
         parent::__construct();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
-        $io = new SymfonyStyle($input, $output);
+    public function __invoke(
+        SymfonyStyle $io,
+        #[Argument(name: 'commitMessage', description: 'Commit message')]
+        #[Ask('Please enter the commit message:')]
+        string $commitMessage,
+        #[Option(shortcut: null, description: 'Add major version')] bool $major = false,
+        #[Option(shortcut: 'm', description: 'Add minor version')] bool $minor = false,
+        #[Option(shortcut: 'p', description: 'Add patch version')] bool $patch = false,
+        #[Option(shortcut: 'i', description: 'Init versioning (set to 0.0.1)')] bool $init = false,
+    ): int {
 
         if ($this->pre_command) {
             $this->validateCommand($this->pre_command);
             $io->writeln('Running pre command: ' . $this->pre_command);
             system($this->pre_command, $res);
             if ($res > 0) {
-                $output->writeln('<error> Error during execution pre command. Versioning canceled. </error>');
+                $io->writeln('<error> Error during execution pre command. Versioning canceled. </error>');
 
                 return Command::FAILURE;
             }
@@ -79,8 +75,8 @@ class VersioningCommand extends Command
             $cacheResult = $this->cacheClearCheck->checkProductionCacheClear($this->cleanupCacheDir);
 
             if (!$cacheResult['success']) {
-                $output->writeln('<error> Error during production cache clear. Versioning canceled. </error>');
-                $output->writeln('<error> ' . $cacheResult['error_output'] . ' </error>');
+                $io->writeln('<error> Error during production cache clear. Versioning canceled. </error>');
+                $io->writeln('<error> ' . $cacheResult['error_output'] . ' </error>');
 
                 return Command::FAILURE;
             }
@@ -90,8 +86,6 @@ class VersioningCommand extends Command
                 $io->writeln('<info>Cache directory var/cache/prod has been cleaned up.</info>');
             }
         }
-
-        $init = $input->getOption('init');
 
         if (!$init) {
             $version = $this->versionHandling->getCurrentVersion();
@@ -103,59 +97,54 @@ class VersioningCommand extends Command
 
         $newVersion = $this->versionHandling->getNewVersion(
             $version,
-            $input->getOption('major'),
-            $input->getOption('minor'),
-            $input->getOption('patch'),
-            $input->getOption('init')
+            $major,
+            $minor,
+            $patch,
+            $init
         );
         $io->writeln("<info>New version: $newVersion</info>");
 
-        $commitMessage = $input->getArgument('commitMessage');
-        if (!$commitMessage) {
-            $commitMessage = "Increase version to $newVersion";
-        }
-
         if (!$this->versionHandling->writeTwigFile('templates/_version.html.twig', $newVersion)) {
-            $output->writeln('<error> Cannot write template file. </error>');
+            $io->writeln('<error> Cannot write template file. </error>');
         }
 
         if (!$this->versionHandling->appendCHANGELOG('CHANGELOG.md', $newVersion, $commitMessage)) {
-            $output->writeln('<error> Cannot write CHANGELOG.md </error>');
+            $io->writeln('<error> Cannot write CHANGELOG.md </error>');
         }
 
         if ($this->run_git) {
             $escapedMessage = escapeshellarg($commitMessage);
             $escapedVersion = escapeshellarg('v' . $newVersion);
 
-            exec('git add .', $output, $returnCode);
+            exec('git add .', $execOutput, $returnCode);
             if ($returnCode !== 0) {
                 $io->error('Git add failed');
 
                 return Command::FAILURE;
             }
 
-            exec("git commit -S -m $escapedMessage", $output, $returnCode);
+            exec("git commit -S -m $escapedMessage", $execOutput, $returnCode);
             if ($returnCode !== 0) {
                 $io->error('Git commit failed');
 
                 return Command::FAILURE;
             }
 
-            exec('git push', $output, $returnCode);
+            exec('git push', $execOutput, $returnCode);
             if ($returnCode !== 0) {
                 $io->error('Git push failed');
 
                 return Command::FAILURE;
             }
 
-            exec("git tag -a -s $escapedVersion -m $escapedMessage", $output, $returnCode);
+            exec("git tag -a -s $escapedVersion -m $escapedMessage", $execOutput, $returnCode);
             if ($returnCode !== 0) {
                 $io->error('Git tag creation failed');
 
                 return Command::FAILURE;
             }
 
-            exec("git push origin $escapedVersion", $output, $returnCode);
+            exec("git push origin $escapedVersion", $execOutput, $returnCode);
             if ($returnCode !== 0) {
                 $io->error('Git push tag failed');
 
@@ -167,7 +156,7 @@ class VersioningCommand extends Command
         if ($this->run_deploy && $this->deployCommand === null) {
             $deployCommand = $this->getApplication()->find('deploy');
             $emptyInput = new ArrayInput([]);
-            $returnCode = $deployCommand->run($emptyInput, $output);
+            $returnCode = $deployCommand->run($emptyInput, $io);
         }
 
         // runs other deploy commands
@@ -176,7 +165,7 @@ class VersioningCommand extends Command
             $io->writeln('Running deploy command: ' . $this->deployCommand);
             system($this->deployCommand, $res);
             if ($res > 0) {
-                $output->writeln('<error> Error during execution deploy command. Versioning canceled. </error>');
+                $io->writeln('<error> Error during execution deploy command. Versioning canceled. </error>');
 
                 return Command::FAILURE;
             }
@@ -185,7 +174,7 @@ class VersioningCommand extends Command
         // run ansible deploy
         if ($this->ansibleDeploy) {
             if (!$this->ansiblePlaybook) {
-                $output->writeln('<error> ansible_deploy is true - but no playbook defined (parameter ansible_playbook). </error>');
+                $io->writeln('<error> ansible_deploy is true - but no playbook defined (parameter ansible_playbook). </error>');
 
                 return Command::FAILURE;
             }
@@ -205,7 +194,7 @@ class VersioningCommand extends Command
             $io->writeln('Running ansible deploy command: ' . $ansibleCommand);
             system($ansibleCommand, $res);
             if ($res > 0) {
-                $output->writeln('<error> Error during execution ansible deploy command. Versioning canceled. </error>');
+                $io->writeln('<error> Error during execution ansible deploy command. Versioning canceled. </error>');
 
                 return Command::FAILURE;
             }

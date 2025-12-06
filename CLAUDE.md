@@ -15,18 +15,20 @@ SvcVersioningBundle is a Symfony bundle that provides automated semantic version
 - `composer validate --strict` - Validate composer.json and composer.lock
 
 ### Bundle Usage
-- `bin/console svc:versioning:new` - Create new version (defaults to patch increment)
-- `bin/console svc:versioning:new --major` - Increment major version
-- `bin/console svc:versioning:new --minor` or `-m` - Increment minor version  
-- `bin/console svc:versioning:new --patch` or `-p` - Increment patch version
-- `bin/console svc:versioning:new --init` or `-i` - Initialize versioning (0.0.1)
-- `bin/console svc:versioning:new "Custom commit message"` - Use custom commit message
+- `bin/console svc:versioning:new` - Create new version (prompts for commit message, defaults to patch increment)
+- `bin/console svc:versioning:new "Commit message"` - Provide commit message as argument
+- `bin/console svc:versioning:new "Message" --major` - Increment major version
+- `bin/console svc:versioning:new "Message" --minor` or `-m` - Increment minor version
+- `bin/console svc:versioning:new "Message" --patch` or `-p` - Increment patch version
+- `bin/console svc:versioning:new "Message" --init` or `-i` - Initialize versioning (0.0.1)
+
+**Note**: If no commit message is provided as argument, the command will prompt you interactively (v8.0.0+)
 
 ## Architecture
 
 ### Bundle Structure
 - **SvcVersioningBundle** (`src/SvcVersioningBundle.php`): Main bundle class with configuration definition
-- **VersioningCommand** (`src/Command/VersioningCommand.php`): Console command for version management
+- **VersioningCommand** (`src/Command/VersioningCommand.php`): Invokable console command for version management (Symfony 7.4+ pattern)
 - **Service Configuration** (`config/services.php`): PHP-based service container configuration (migrated from YAML in v6.1.0)
 - **Value Objects**:
   - `Version`: Immutable value object representing semantic versions (major.minor.patch)
@@ -62,7 +64,8 @@ Bundle configuration is defined in `config/packages/svc_versioning.yaml` with op
 
 ## Dependencies
 - PHP 8.2+ (required for readonly properties and modern features)
-- Symfony 6 or 7 (console, http-kernel, dependency-injection, config, yaml)
+- Symfony 7.4+ or 8+ (console, http-kernel, dependency-injection, config, yaml)
+  - **Breaking Change in v8.0.0**: Requires Symfony 7.4+ for invokable command pattern
 - Optional: easycorp/easy-deploy-bundle for deployment
 - PHPStan 2.1+ for static analysis (level 6)
 - PHPUnit 12.4+ for testing
@@ -74,8 +77,32 @@ Bundle configuration is defined in `config/packages/svc_versioning.yaml` with op
 - **Named arguments** (PHP 8.0): Improved readability
 - **Typed properties** (PHP 7.4+): Strict type safety
 - **PHP-based service configuration** (Symfony 6.3+): Type-safe service definitions with IDE support
+- **Invokable commands** (Symfony 7.3+): Modern command pattern with `__invoke()` method
+- **#[Argument] and #[Option] attributes** (Symfony 7.3+): Clean parameter definitions directly in method signature
+- **#[Ask] attribute** (Symfony 7.3+): Interactive prompts for missing arguments
 
 ## Code Quality & Architecture Patterns
+
+### Invokable Command Pattern (v8.0.0+)
+The `VersioningCommand` uses Symfony 7.4's invokable command pattern:
+- **`__invoke()` method**: Replaces traditional `execute()` for cleaner code
+- **Attribute-based configuration**: `#[Argument]` and `#[Option]` attributes define parameters inline
+- **Interactive prompts**: `#[Ask]` attribute prompts for commitMessage if not provided
+- **Required arguments**: `commitMessage` can be passed as argument or will be prompted interactively
+- **Explicit naming**: Uses `#[Argument(name: 'commitMessage')]` for clarity
+- **SymfonyStyle**: Preferred over OutputInterface for modern output handling
+- **Parameter order**: Service dependencies → Arguments → Options
+
+Example:
+```php
+public function __invoke(
+    SymfonyStyle $io,
+    #[Argument(name: 'commitMessage', description: 'Commit message')]
+    #[Ask('Please enter the commit message:')]
+    string $commitMessage,
+    #[Option(shortcut: 'm', description: 'Add minor version')] bool $minor = false,
+): int { /* ... */ }
+```
 
 ### Domain-Driven Design (DDD)
 The bundle uses DDD principles with clear separation of concerns:
@@ -102,5 +129,5 @@ Comprehensive test suite covering all components:
 - **Command Tests**: VersioningCommand tested with Symfony CommandTester
 - **Bundle Tests**: Configuration and dependency injection testing
 - **Test Configuration**: PHPUnit XML configuration with proper test structure
-- **Test Coverage**: 71 tests, 182 assertions
+- **Test Coverage**: 80 tests, 200 assertions
 - bitte changelog.md nicht direkt updaten. bin/release.php wird für den Release-prozess benutzt und dort wird der Release-Kommentar gepflegt

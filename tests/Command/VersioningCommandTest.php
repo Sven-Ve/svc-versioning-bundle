@@ -80,7 +80,7 @@ class VersioningCommandTest extends TestCase
 
     public function testExecuteWithInitOption(): void
     {
-        $this->commandTester->execute(['--init' => true]);
+        $this->commandTester->execute(['--init' => true, 'commitMessage' => 'Initial version']);
 
         $this->assertEquals(0, $this->commandTester->getStatusCode());
         $this->assertFileExists('.version');
@@ -95,7 +95,7 @@ class VersioningCommandTest extends TestCase
     {
         file_put_contents('.version', '1.2.3');
 
-        $this->commandTester->execute(['--patch' => true]);
+        $this->commandTester->execute(['--patch' => true, 'commitMessage' => 'Patch update']);
 
         $this->assertEquals(0, $this->commandTester->getStatusCode());
         $this->assertEquals('1.2.4', trim(file_get_contents('.version')));
@@ -109,7 +109,7 @@ class VersioningCommandTest extends TestCase
     {
         file_put_contents('.version', '1.2.3');
 
-        $this->commandTester->execute(['--minor' => true]);
+        $this->commandTester->execute(['--minor' => true, 'commitMessage' => 'Minor update']);
 
         $this->assertEquals(0, $this->commandTester->getStatusCode());
         $this->assertEquals('1.3.0', trim(file_get_contents('.version')));
@@ -123,7 +123,7 @@ class VersioningCommandTest extends TestCase
     {
         file_put_contents('.version', '1.2.3');
 
-        $this->commandTester->execute(['--major' => true]);
+        $this->commandTester->execute(['--major' => true, 'commitMessage' => 'Major update']);
 
         $this->assertEquals(0, $this->commandTester->getStatusCode());
         $this->assertEquals('2.0.0', trim(file_get_contents('.version')));
@@ -152,7 +152,7 @@ class VersioningCommandTest extends TestCase
     {
         file_put_contents('.version', '2.5.10');
 
-        $this->commandTester->execute([]);
+        $this->commandTester->execute(['commitMessage' => 'Default update']);
 
         $this->assertEquals(0, $this->commandTester->getStatusCode());
         $this->assertEquals('2.5.11', trim(file_get_contents('.version')));
@@ -160,7 +160,7 @@ class VersioningCommandTest extends TestCase
 
     public function testExecuteCreatesVersionFileIfNotExists(): void
     {
-        $this->commandTester->execute(['--patch' => true]);
+        $this->commandTester->execute(['--patch' => true, 'commitMessage' => 'Patch update']);
 
         $this->assertEquals(0, $this->commandTester->getStatusCode());
         $this->assertFileExists('.version');
@@ -171,7 +171,7 @@ class VersioningCommandTest extends TestCase
     {
         file_put_contents('.version', '1.0.0');
 
-        $this->commandTester->execute(['--patch' => true]);
+        $this->commandTester->execute(['--patch' => true, 'commitMessage' => 'Patch update']);
 
         $this->assertEquals(0, $this->commandTester->getStatusCode());
         $this->assertFileExists('templates/_version.html.twig');
@@ -215,7 +215,7 @@ class VersioningCommandTest extends TestCase
         );
 
         $commandTester = new CommandTester($command);
-        $commandTester->execute(['--init' => true]);
+        $commandTester->execute(['--init' => true, 'commitMessage' => 'Test version']);
 
         $this->assertEquals(0, $commandTester->getStatusCode());
 
@@ -240,7 +240,7 @@ class VersioningCommandTest extends TestCase
         );
 
         $commandTester = new CommandTester($command);
-        $commandTester->execute(['--init' => true]);
+        $commandTester->execute(['--init' => true, 'commitMessage' => 'Test version']);
 
         $this->assertEquals(1, $commandTester->getStatusCode());
 
@@ -265,7 +265,7 @@ class VersioningCommandTest extends TestCase
         );
 
         $commandTester = new CommandTester($command);
-        $commandTester->execute(['--init' => true]);
+        $commandTester->execute(['--init' => true, 'commitMessage' => 'Test version']);
 
         $this->assertEquals(1, $commandTester->getStatusCode());
 

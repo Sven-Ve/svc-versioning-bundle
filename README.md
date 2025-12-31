@@ -46,6 +46,7 @@ bin/console svc:versioning:new --patch
   - Ansible automation
   - Docker deployments
 - **🧪 Pre-deployment Validation**: Run tests, linting, or custom commands before release
+- **🔒 Security Scanning**: Built-in composer audit for vulnerability detection (enabled by default)
 - **🔄 CI/CD Ready**: Perfect for automated pipelines
 - **💎 Modern PHP**: Built with PHP 8.2+ features (readonly properties, match expressions)
 - **🛡️ Type Safe**: Immutable value objects with PHPStan level 6 compliance
@@ -56,12 +57,13 @@ bin/console svc:versioning:new --patch
 
 When you run `bin/console svc:versioning:new`, the bundle:
 
-1. **Validates** - Runs optional pre-commands (tests, linting)
-2. **Cache Check** - Optionally verifies production cache can be cleared without errors
-3. **Increments** - Updates version number using semantic versioning
-4. **Updates Files** - Modifies `.version`, `CHANGELOG.md`, and Twig templates
-5. **Git Operations** - Commits changes, pushes, and creates tags
-6. **Deploys** - Triggers deployment via your chosen method
+1. **Pre-validation** - Runs optional pre-commands (tests, linting)
+2. **Security Check** - Scans dependencies for vulnerabilities with composer audit (enabled by default)
+3. **Cache Check** - Optionally verifies production cache can be cleared without errors
+4. **Increments** - Updates version number using semantic versioning
+5. **Updates Files** - Modifies `.version`, `CHANGELOG.md`, and Twig templates
+6. **Git Operations** - Commits changes, pushes, and creates tags
+7. **Deploys** - Triggers deployment via your chosen method
 
 ## 📖 Documentation
 
@@ -110,6 +112,7 @@ svc_versioning:
     run_git: true                    # Enable git operations
     run_deploy: true                 # Enable deployment
     pre_command: "vendor/bin/phpunit" # Run tests before versioning
+    run_composer_audit: true         # Check for security vulnerabilities (default: true)
     check_cache_clear: false         # Check if production cache clear works
     cleanup_cache_dir: false         # Delete var/cache/prod after check
 ```
@@ -135,6 +138,9 @@ bin/console svc:versioning:new --patch
 
 # Quick patch without specifying type (defaults to patch)
 bin/console svc:versioning:new "Quick bugfix"
+
+# Override security audit check (emergency use only)
+bin/console svc:versioning:new "Hotfix" --patch --ignore-audit
 ```
 
 ## 🔧 Deployment Options

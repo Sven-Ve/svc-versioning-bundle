@@ -114,3 +114,8 @@
 ## Version 8.0.0
 *Sat, 06 Dec 2025 20:55:03 +0000*
 - BREAKING: migrate to Symfony 7.4+ invokable command pattern - requires Symfony 7.4 or higher
+
+
+## Version 8.1.0
+*Wed, 31 Dec 2025 11:08:31 +0000*
+- add composer audit security check (enabled by default) - runs after pre_command to detect vulnerabilities

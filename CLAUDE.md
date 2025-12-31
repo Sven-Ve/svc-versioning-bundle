@@ -21,6 +21,7 @@ SvcVersioningBundle is a Symfony bundle that provides automated semantic version
 - `bin/console svc:versioning:new "Message" --minor` or `-m` - Increment minor version
 - `bin/console svc:versioning:new "Message" --patch` or `-p` - Increment patch version
 - `bin/console svc:versioning:new "Message" --init` or `-i` - Initialize versioning (0.0.1)
+- `bin/console svc:versioning:new "Message" --ignore-audit` - Override composer audit check (emergency use only)
 
 **Note**: If no commit message is provided as argument, the command will prompt you interactively (v8.0.0+)
 
@@ -44,18 +45,21 @@ SvcVersioningBundle is a Symfony bundle that provides automated semantic version
 
 ### Workflow Process
 1. Run optional pre-command (tests, linting, etc.)
-2. Calculate new version based on current version and increment type
-3. Write version to `.version` file
-4. Generate Twig template (`templates/_version.html.twig`)
-5. Append version entry to `CHANGELOG.md`
-6. Optional: Git operations (add, commit, push, tag)
-7. Optional: Deploy via EasyDeploy bundle, custom command, or Ansible
+2. Run composer audit to check for security vulnerabilities (enabled by default, can be overridden with `--ignore-audit`)
+3. Optional: Check production cache clear
+4. Calculate new version based on current version and increment type
+5. Write version to `.version` file
+6. Generate Twig template (`templates/_version.html.twig`)
+7. Append version entry to `CHANGELOG.md`
+8. Optional: Git operations (add, commit, push, tag)
+9. Optional: Deploy via EasyDeploy bundle, custom command, or Ansible
 
 ### Configuration
 Bundle configuration is defined in `config/packages/svc_versioning.yaml` with options for:
 - Git operations (`run_git`)
 - Deployment settings (`run_deploy`, `deploy_command`, `ansible_deploy`)
 - Pre-execution commands (`pre_command`)
+- Security checks (`run_composer_audit` - default: true)
 
 ### Key Files Generated
 - `.version` - Current version number

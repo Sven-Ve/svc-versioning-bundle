@@ -37,6 +37,7 @@ class VersioningCommand extends Command
         private readonly bool $run_git,
         private readonly bool $run_deploy,
         private readonly ?string $pre_command,
+        private readonly bool $runComposerAudit,
         private readonly bool $checkCacheClear,
         private readonly bool $cleanupCacheDir,
         private readonly ?string $deployCommand,
@@ -56,6 +57,7 @@ class VersioningCommand extends Command
         #[Option(shortcut: 'm', description: 'Add minor version')] bool $minor = false,
         #[Option(shortcut: 'p', description: 'Add patch version')] bool $patch = false,
         #[Option(shortcut: 'i', description: 'Init versioning (set to 0.0.1)')] bool $init = false,
+        #[Option(shortcut: null, description: 'Ignore composer audit vulnerabilities and continue with release')] bool $ignoreAudit = false,
     ): int {
 
         if ($this->pre_command) {
@@ -66,6 +68,27 @@ class VersioningCommand extends Command
                 $io->writeln('<error> Error during execution pre command. Versioning canceled. </error>');
 
                 return Command::FAILURE;
+            }
+        }
+
+        // Run composer audit to check for security vulnerabilities
+        if ($this->runComposerAudit) {
+            $io->writeln('Running composer audit to check for security vulnerabilities...');
+            system('composer audit', $auditResult);
+            if ($auditResult > 0) {
+                if ($ignoreAudit) {
+                    $io->writeln('<warning> Security vulnerabilities detected by composer audit. </warning>');
+                    $io->writeln('<warning> Continuing with release due to --ignore-audit flag. </warning>');
+                    $io->writeln('<warning> Please address vulnerabilities as soon as possible! </warning>');
+                } else {
+                    $io->writeln('<error> Security vulnerabilities detected by composer audit. Versioning canceled. </error>');
+                    $io->writeln('<error> Please review and fix vulnerabilities before creating a new version. </error>');
+                    $io->writeln('<error> Use --ignore-audit to override this check (not recommended). </error>');
+
+                    return Command::FAILURE;
+                }
+            } else {
+                $io->writeln('<info>No security vulnerabilities detected.</info>');
             }
         }
 

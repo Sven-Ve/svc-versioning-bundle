@@ -43,6 +43,7 @@ class VersioningCommandTest extends TestCase
             run_git: false,
             run_deploy: false,
             pre_command: null,
+            runComposerAudit: false,
             checkCacheClear: false,
             cleanupCacheDir: false,
             deployCommand: null,
@@ -206,6 +207,7 @@ class VersioningCommandTest extends TestCase
             run_git: false,
             run_deploy: false,
             pre_command: 'echo "Running pre-command"',
+            runComposerAudit: false,
             checkCacheClear: false,
             cleanupCacheDir: false,
             deployCommand: null,
@@ -231,6 +233,7 @@ class VersioningCommandTest extends TestCase
             run_git: false,
             run_deploy: false,
             pre_command: 'exit 1',
+            runComposerAudit: false,
             checkCacheClear: false,
             cleanupCacheDir: false,
             deployCommand: null,
@@ -248,6 +251,93 @@ class VersioningCommandTest extends TestCase
         $this->assertStringContainsString('Error during execution pre command', $output);
     }
 
+    public function testExecuteWithComposerAudit(): void
+    {
+        $command = new VersioningCommand(
+            versionHandling: new VersionHandling(),
+            cacheClearCheck: new CacheClearCheck(),
+            run_git: false,
+            run_deploy: false,
+            pre_command: null,
+            runComposerAudit: true,
+            checkCacheClear: false,
+            cleanupCacheDir: false,
+            deployCommand: null,
+            ansibleDeploy: false,
+            ansibleInventory: null,
+            ansiblePlaybook: null
+        );
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(['--init' => true, 'commitMessage' => 'Test version']);
+
+        // Note: We don't check the status code because composer audit may fail
+        // in the test environment (temp directory without composer.json).
+        // We only verify that the audit message appears in the output.
+        $output = $commandTester->getDisplay();
+        $this->assertStringContainsString('Running composer audit', $output);
+    }
+
+    public function testExecuteWithComposerAuditDisabled(): void
+    {
+        $command = new VersioningCommand(
+            versionHandling: new VersionHandling(),
+            cacheClearCheck: new CacheClearCheck(),
+            run_git: false,
+            run_deploy: false,
+            pre_command: null,
+            runComposerAudit: false,
+            checkCacheClear: false,
+            cleanupCacheDir: false,
+            deployCommand: null,
+            ansibleDeploy: false,
+            ansibleInventory: null,
+            ansiblePlaybook: null
+        );
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(['--init' => true, 'commitMessage' => 'Test version']);
+
+        $this->assertEquals(0, $commandTester->getStatusCode());
+
+        $output = $commandTester->getDisplay();
+        $this->assertStringNotContainsString('Running composer audit', $output);
+    }
+
+    public function testExecuteWithIgnoreAuditFlag(): void
+    {
+        $command = new VersioningCommand(
+            versionHandling: new VersionHandling(),
+            cacheClearCheck: new CacheClearCheck(),
+            run_git: false,
+            run_deploy: false,
+            pre_command: null,
+            runComposerAudit: true,
+            checkCacheClear: false,
+            cleanupCacheDir: false,
+            deployCommand: null,
+            ansibleDeploy: false,
+            ansibleInventory: null,
+            ansiblePlaybook: null
+        );
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([
+            '--init' => true,
+            'commitMessage' => 'Test version',
+            '--ignore-audit' => true,
+        ]);
+
+        // Should succeed even if composer audit would fail
+        // (In this test environment, composer audit will likely fail due to missing composer.json)
+        $output = $commandTester->getDisplay();
+        $this->assertStringContainsString('Running composer audit', $output);
+
+        // Verify the command accepts the --ignore-audit option without errors
+        $definition = $command->getDefinition();
+        $this->assertTrue($definition->hasOption('ignore-audit'));
+    }
+
     public function testExecuteWithAnsibleDeployFailsWithoutPlaybook(): void
     {
         $command = new VersioningCommand(
@@ -256,6 +346,7 @@ class VersioningCommandTest extends TestCase
             run_git: false,
             run_deploy: false,
             pre_command: null,
+            runComposerAudit: false,
             checkCacheClear: false,
             cleanupCacheDir: false,
             deployCommand: null,

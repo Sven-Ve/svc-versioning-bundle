@@ -12,8 +12,8 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-$version = '8.0.0';
-$message = 'BREAKING: migrate to Symfony 7.4+ invokable command pattern - requires Symfony 7.4 or higher';
+$version = '8.1.0';
+$message = 'add composer audit security check (enabled by default) - runs after pre_command to detect vulnerabilities';
 
 echo "Running phpstan:\n";
 system('composer run-script phpstan', $res);
@@ -27,6 +27,14 @@ echo "Running tests:\n";
 system('composer run-script test', $res);
 if ($res > 0) {
     echo "\nError during execution test scripts. Releasing cannceled.\n";
+
+    return 1;
+}
+
+echo "Running audit:\n";
+system('composer audit', $res);
+if ($res > 0) {
+    echo "\nError during execution audit. Releasing cannceled.\n";
 
     return 1;
 }

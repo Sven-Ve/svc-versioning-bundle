@@ -13,6 +13,9 @@ svc_versioning:
     # Pre-execution Commands
     pre_command: ~                   # Command to run before versioning (e.g., tests, linting)
 
+    # Security Checks
+    run_composer_audit: true         # Run composer audit to check for security vulnerabilities
+
     # Cache Validation
     check_cache_clear: false         # Check if production cache clear runs without errors
     cleanup_cache_dir: false         # Delete var/cache/prod directory after successful check
@@ -62,6 +65,62 @@ svc_versioning:
     # or
     pre_command: "vendor/bin/phpunit && composer run-script phpstan"
 ```
+
+### Security Check (`run_composer_audit`)
+
+**Default:** `true`
+
+Runs `composer audit` to check for known security vulnerabilities in your dependencies before creating a new version. If vulnerabilities are detected, the versioning process is aborted.
+
+**Why it's enabled by default:**
+- Security-first approach: catches vulnerabilities before release
+- Prevents accidentally deploying applications with known security issues
+- Complies with security best practices for production releases
+
+```yaml
+svc_versioning:
+    run_composer_audit: true  # Default, can be omitted
+```
+
+**To disable (not recommended):**
+```yaml
+svc_versioning:
+    run_composer_audit: false
+```
+
+**How it works:**
+- Executes `composer audit` after pre_command
+- Checks composer.lock for packages with known security advisories
+- If vulnerabilities found (exit code > 0), versioning is aborted
+- Displays vulnerability details from composer audit output
+- Shows clear error message with remediation instructions
+
+**Requirements:**
+- Composer 2.4+ (audit command introduced in Composer 2.4)
+- composer.lock file must exist and be up to date
+
+**Example output on failure:**
+```
+Running composer audit to check for security vulnerabilities...
+[composer audit output showing vulnerabilities]
+Error: Security vulnerabilities detected by composer audit. Versioning canceled.
+Error: Please review and fix vulnerabilities before creating a new version.
+Error: Use --ignore-audit to override this check (not recommended).
+```
+
+**Emergency override:**
+
+In exceptional circumstances (e.g., critical hotfix when no patch is available yet), you can bypass the audit check:
+
+```bash
+bin/console svc:versioning:new "Emergency hotfix" --patch --ignore-audit
+```
+
+**Warning:** Using `--ignore-audit` will:
+- Still run composer audit and display vulnerabilities
+- Show warnings about detected issues
+- Continue with the release despite vulnerabilities
+- This should only be used in emergency situations
 
 ### Cache Validation
 
@@ -148,6 +207,7 @@ svc_versioning:
     run_git: false
     run_deploy: false
     pre_command: "vendor/bin/phpunit --testsuite=unit"
+    run_composer_audit: false  # Optional: skip audit in dev for faster iterations
 ```
 
 ### Production Environment
@@ -157,6 +217,7 @@ svc_versioning:
     run_git: true
     run_deploy: true
     pre_command: "composer run-script phpstan && vendor/bin/phpunit"
+    run_composer_audit: true  # Ensure no vulnerabilities in production
     check_cache_clear: true
     cleanup_cache_dir: true
     ansible_deploy: true
@@ -171,6 +232,7 @@ svc_versioning:
     run_git: true
     run_deploy: false
     pre_command: "vendor/bin/phpunit"
+    # run_composer_audit defaults to true (recommended)
 ```
 
 ## Environment-Specific Configuration

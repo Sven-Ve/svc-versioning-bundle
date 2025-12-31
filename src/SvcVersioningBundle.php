@@ -36,6 +36,7 @@ class SvcVersioningBundle extends AbstractBundle
             ->stringNode('ansible_inventory')->defaultValue('inventory.yaml')->info('if ansible_deploy==true the name of the inventory file (default="inventory.yaml")')->end()
             ->stringNode('ansible_playbook')->info('if ansible_deploy==true the name of the ansible playbook')->end()
             ->stringNode('pre_command')->info('run this command before start versioning, stop on error')->example('composer run-script phpstan')->end()
+            ->booleanNode('run_composer_audit')->defaultTrue()->info('Run composer audit to check for security vulnerabilities')->end()
             ->booleanNode('check_cache_clear')->defaultFalse()->info('Check if production cache clear runs without errors after pre_command')->end()
             ->booleanNode('cleanup_cache_dir')->defaultFalse()->info('Delete var/cache/prod directory after cache clear check')->end()
           ->end();
@@ -53,6 +54,7 @@ class SvcVersioningBundle extends AbstractBundle
           ->arg('$run_git', $config['run_git'])
           ->arg('$run_deploy', $config['run_deploy'])
           ->arg('$pre_command', $config['pre_command'] ?? null)
+          ->arg('$runComposerAudit', $config['run_composer_audit'])
           ->arg('$checkCacheClear', $config['check_cache_clear'])
           ->arg('$cleanupCacheDir', $config['cleanup_cache_dir'])
           ->arg('$deployCommand', $config['deploy_command'] ?? null)

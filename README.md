@@ -1,7 +1,8 @@
 # SvcVersioningBundle
 
 [![CI](https://github.com/Sven-Ve/svc-versioning-bundle/actions/workflows/php.yml/badge.svg)](https://github.com/Sven-Ve/svc-versioning-bundle/actions/workflows/php.yml)
-[![PHP Version](https://img.shields.io/badge/php-%3E%3D8.2-blue)](https://php.net/)
+![Last commit](https://img.shields.io/github/last-commit/Sven-Ve/svc-versioning-bundle)
+[![PHP Version](https://img.shields.io/badge/php-%3E%3D8.4-blue)](https://php.net/)
 [![Symfony](https://img.shields.io/badge/symfony-7.4%2B%20%7C%208-green)](https://symfony.com/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 

@@ -119,3 +119,8 @@
 ## Version 8.1.0
 *Wed, 31 Dec 2025 11:08:31 +0000*
 - add composer audit security check (enabled by default) - runs after pre_command to detect vulnerabilities
+
+
+## Version 8.2.0
+*Thu, 01 Jan 2026 14:49:40 +0000*
+- add audit command before release and as github action, update license year to 2026
